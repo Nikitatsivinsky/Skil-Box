@@ -15,7 +15,12 @@ expenses_2 = expenses
 month = 1
 total_cash_2 = 0
 while month < 11:
+    month += 1 #плюс месяц
+    plus_proc = int((expenses_2/100)*3)
+    expenses_2 += int(plus_proc)
+    total_cash_2 += int(expenses_2-10000)
+    print('За ', month-1, ' месяц, - ', expenses_2-10000, ' процентов.')
 
 
+print('Студенту надо попросить ', total_cash_2,' рублей')
 
-# TODO здесь ваш код
