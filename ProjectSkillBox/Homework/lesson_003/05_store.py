@@ -30,6 +30,26 @@ store = {
     ],
 }
 
+# subject_list = list(goods)
+# subject = subject_list[1]
+#
+# print(x)
+
+for subject in goods:
+    subject_id = (goods[subject])
+    store_list = list(store[subject_id])
+    coast_subject = 0
+    for store_list_func in store_list:
+        quantity = store_list_func['quantity']
+        price = store_list_func['price']
+        coast_subject += quantity * price
+    print(subject, '-', quantity, 'шт, стоимость ', coast_subject, 'руб.')
+
+
+
+
+
+
 # Рассчитать на какую сумму лежит каждого товара на складе.
 #
 # Вывести суммарную стоимость каждого товара на складе c помощью циклов
