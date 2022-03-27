@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# pip install simple_draw
-
 import simple_draw as sd
 
 # нарисовать треугольник из точки (300, 300) с длиной стороны 200
