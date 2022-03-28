@@ -27,55 +27,55 @@ import simple_draw as sd
 # sd.line()
 # Результат решения см lesson_004/results/exercise_01_shapes.jpg
 
-sd.resolution = (1200, 600)
-
-
-def triangle(point, angle, length):
-    v1 = sd.get_vector(start_point=point, angle=angle, length=length)
-    v1.draw()
-    v2 = sd.get_vector(start_point=v1.end_point, angle=angle + 120, length=length)
-    v2.draw()
-    v3 = sd.get_vector(start_point=v2.end_point, angle=angle + 240, length=length)
-    v3.draw()
-
-
-def square(point, angle, length):
-    v1 = sd.get_vector(start_point=point, angle=angle, length=length)
-    v1.draw()
-    v2 = sd.get_vector(start_point=v1.end_point, angle=angle + 90, length=length)
-    v2.draw()
-    v3 = sd.get_vector(start_point=v2.end_point, angle=angle + 180, length=length)
-    v3.draw()
-    v4 = sd.get_vector(start_point=v3.end_point, angle=angle + 270, length=length)
-    v4.draw()
-
-
-def hexagon(point, angle, length):
-    v1 = sd.get_vector(start_point=point, angle=angle, length=length)
-    v1.draw()
-    v2 = sd.get_vector(start_point=v1.end_point, angle=angle + 60, length=length)
-    v2.draw()
-    v3 = sd.get_vector(start_point=v2.end_point, angle=angle + 120, length=length)
-    v3.draw()
-    v4 = sd.get_vector(start_point=v3.end_point, angle=angle + 180, length=length)
-    v4.draw()
-    v5 = sd.get_vector(start_point=v4.end_point, angle=angle + 240, length=length)
-    v5.draw()
-    v6 = sd.get_vector(start_point=v5.end_point, angle=angle + 300, length=length)
-    v6.draw()
-
-
-def pentagon(point, angle, length):
-    v1 = sd.get_vector(start_point=point, angle=angle, length=length)
-    v1.draw()
-    v2 = sd.get_vector(start_point=v1.end_point, angle=angle + 75, length=length)
-    v2.draw()
-    v3 = sd.get_vector(start_point=v2.end_point, angle=angle + 140, length=length)
-    v3.draw()
-    v4 = sd.get_vector(start_point=v3.end_point, angle=angle + 225, length=length)
-    v4.draw()
-    v5 = sd.get_vector(start_point=v4.end_point, angle=angle + 285, length=length)
-    v5.draw()
+# sd.resolution = (1200, 600)
+#
+#
+# def triangle(point, angle, length):
+#     v1 = sd.get_vector(start_point=point, angle=angle, length=length)
+#     v1.draw()
+#     v2 = sd.get_vector(start_point=v1.end_point, angle=angle + 120, length=length)
+#     v2.draw()
+#     v3 = sd.get_vector(start_point=v2.end_point, angle=angle + 240, length=length)
+#     v3.draw()
+#
+#
+# def square(point, angle, length):
+#     v1 = sd.get_vector(start_point=point, angle=angle, length=length)
+#     v1.draw()
+#     v2 = sd.get_vector(start_point=v1.end_point, angle=angle + 90, length=length)
+#     v2.draw()
+#     v3 = sd.get_vector(start_point=v2.end_point, angle=angle + 180, length=length)
+#     v3.draw()
+#     v4 = sd.get_vector(start_point=v3.end_point, angle=angle + 270, length=length)
+#     v4.draw()
+#
+#
+# def hexagon(point, angle, length):
+#     v1 = sd.get_vector(start_point=point, angle=angle, length=length)
+#     v1.draw()
+#     v2 = sd.get_vector(start_point=v1.end_point, angle=angle + 60, length=length)
+#     v2.draw()
+#     v3 = sd.get_vector(start_point=v2.end_point, angle=angle + 120, length=length)
+#     v3.draw()
+#     v4 = sd.get_vector(start_point=v3.end_point, angle=angle + 180, length=length)
+#     v4.draw()
+#     v5 = sd.get_vector(start_point=v4.end_point, angle=angle + 240, length=length)
+#     v5.draw()
+#     v6 = sd.get_vector(start_point=v5.end_point, angle=angle + 300, length=length)
+#     v6.draw()
+#
+#
+# def pentagon(point, angle, length):
+#     v1 = sd.get_vector(start_point=point, angle=angle, length=length)
+#     v1.draw()
+#     v2 = sd.get_vector(start_point=v1.end_point, angle=angle + 75, length=length)
+#     v2.draw()
+#     v3 = sd.get_vector(start_point=v2.end_point, angle=angle + 140, length=length)
+#     v3.draw()
+#     v4 = sd.get_vector(start_point=v3.end_point, angle=angle + 225, length=length)
+#     v4.draw()
+#     v5 = sd.get_vector(start_point=v4.end_point, angle=angle + 285, length=length)
+#     v5.draw()
 
 
 # angle = 10
