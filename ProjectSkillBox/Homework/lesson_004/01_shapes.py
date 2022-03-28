@@ -100,8 +100,6 @@ import simple_draw as sd
 # - длина стороны
 
 
-
-
 #
 # Использование копи-пасты - обязательно! Даже тем кто уже знает про её пагубность. Для тренировки.
 # Как работает копипаста:
@@ -128,46 +126,37 @@ import simple_draw as sd
 # Потом надо изменить функции рисования конкретных фигур - вызывать общую функцию вместо "почти" одинакового кода.
 #
 #
+def draw(point, length, range_cycle, angle_ualue):
+    angle = 0
+    for cycle in range(range_cycle):
+        v1 = sd.get_vector(start_point=point, angle=angle, length=length, width=4)
+        point = v1.end_point
+        angle += angle_ualue
+        v1.draw()
 
-length_six = 120
-point_six = sd.get_point(380, 100)
-angle_six = 0
+# треугольник
+length_triangle = 200
+point_triangle = sd.get_point(50, 400)
+range_triangle = 3
+start_point = point_triangle
+draw(point=point_triangle, length=length_triangle, range_cycle=range_triangle, angle_ualue=120)
 
-def six(point, angle, length):
-    v1 = sd.get_vector(start_point=point, angle=angle, length=length, width=3)
-    v1.draw()
+# квадрат
+length_square = 170
+point_square = sd.get_point(330, 400)
+range_square = 4
+draw(point=point_square, length=length_square, range_cycle=range_square, angle_ualue=90)
 
-    v2 = sd.get_vector(start_point=v1.end_point, angle=angle + 60, length=length, width=3)
-    v2.draw()
-
-    v3 = sd.get_vector(start_point=v2.end_point, angle=angle + 120, length=length, width=3)
-    v3.draw()
-
-    v4 = sd.get_vector(start_point=v3.end_point, angle=angle + 180, length=length, width=3)
-    v4.draw()
-
-    v5 = sd.get_vector(start_point=v4.end_point, angle=angle + 240, length=length, width=3)
-    v5.draw()
-
-    v6 = sd.get_vector(start_point=v5.end_point, angle=angle + 300, length=length, width=3)
-    v6.draw()
-
-six(point=point_six, angle=angle_six, length=length_six)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# пятиугольник
+length_pentagon = 140
+point_pentagon = sd.get_point(90, 100)
+range_pentagon = 5
+draw(point=point_pentagon, length=length_pentagon, range_cycle= range_pentagon, angle_ualue=72)
+# - шестиугольник
+length_hexagon = 120
+point_six_hexagon = sd.get_point(380, 100)
+range_six_hexagon = 6
+draw(point=point_six_hexagon, length=length_hexagon, range_cycle= range_six_hexagon, angle_ualue=60)
 
 
 
@@ -182,6 +171,4 @@ six(point=point_six, angle=angle_six, length=length_six)
 # А теперь - сколько надо работы что бы внести изменения в код? Выгода на лицо :)
 # Поэтому среди программистов есть принцип D.R.Y. https://clck.ru/GEsA9
 # Будьте ленивыми, не используйте копи-пасту!
-
-
 sd.pause()
