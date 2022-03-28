@@ -129,9 +129,10 @@ import simple_draw as sd
 def draw(point, length, range_cycle, angle_ualue):
     angle = 0
     for cycle in range(range_cycle):
-        v1 = sd.get_vector(start_point=point, angle=angle, length=length, width=4)
+        v1 = sd.get_vector(start_point=point, angle=angle, length=length, width=1)
         point = v1.end_point
         angle += angle_ualue
+        sd.line(start_point= v1.start_point, end_point= v1.end_point, width=4)
         v1.draw()
 
 # треугольник

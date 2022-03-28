@@ -4,11 +4,13 @@
 
 
 all_strings = int(input('Введите сколько всего строк: '))
+
 while all_strings < 1:
     print('Ошибка: Число не может иметь отрицательное значение или равняться нулю!')
     all_strings = int(input('Заново введите сколько всего строк: '))
 input_string_list = []
 input_string = int(input('Введите номер строчки которая уже есть в списке: '))
+
 if input_string < int(1):
     print('Ошибка: Число не может иметь отрицательное значение!')
 if all_strings < input_string:
