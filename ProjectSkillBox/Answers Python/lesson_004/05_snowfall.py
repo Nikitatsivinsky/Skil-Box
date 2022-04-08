@@ -19,25 +19,26 @@ N = 20
 
 x = []
 y = []
-length_of_snowflake = []
+length_snow = []
 
 for _ in range(N):
     x.append(sd.random_number(0, 600))
     y.append(sd.random_number(300, 650))
-    length_of_snowflake.append(sd.random_number(10, 50))
+    length_snow.append(sd.random_number(20, 100))
+
 while True:
     sd.start_drawing()
-    for i in range(N):
-        point_0 = sd.get_point(x[i], y[i])
-        sd.snowflake(center=point_0, length=length_of_snowflake[i], color=sd.background_color)
-        y[i] -= 5
-        if y[i] < length_of_snowflake[i]:
-            y[i] = sd.random_number(600, 650)
-            x[i] = sd.random_number(0, 600)
-            sd.snowflake(center=point_0, length=length_of_snowflake[i], color=sd.COLOR_WHITE)
-        x[i] += sd.random_number(-5, 5)
-        point_1 = sd.get_point(x[i], y[i])
-        sd.snowflake(center=point_1, length=length_of_snowflake[i], color=sd.COLOR_WHITE)
+    for snowfall in range(N):
+        point_0 = sd.get_point(x[snowfall], y[snowfall])
+        sd.snowflake(center=point_0, length=length_snow[snowfall], color=sd.background_color)
+        y[snowfall] -= 5
+        if y[snowfall] < length_snow[snowfall]:
+            y[snowfall] = sd.random_number(600, 650)
+            x[snowfall] = sd.random_number(0, 600)
+            sd.snowflake(center=point_0, length=length_snow[snowfall], color=sd.COLOR_WHITE)
+        x[snowfall] += sd.random_number(-5, 5)
+        point_1 = sd.get_point(x[snowfall], y[snowfall])
+        sd.snowflake(center=point_1, length=length_snow[snowfall], color=sd.COLOR_WHITE)
         sd.finish_drawing()
     sd.sleep(0.1)
     if sd.user_want_exit():
