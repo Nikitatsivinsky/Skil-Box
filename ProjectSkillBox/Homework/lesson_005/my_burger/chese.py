@@ -1,0 +1,1 @@
+chese_enter = 'сыр'
