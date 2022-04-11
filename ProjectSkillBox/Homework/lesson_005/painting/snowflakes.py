@@ -8,7 +8,6 @@ import random
 def snow():
     num = 0
     while True:
-
         x = sd.random_number(10, 450)
         y = sd.random_number(0, 100)
         point = sd.get_point(x, y)

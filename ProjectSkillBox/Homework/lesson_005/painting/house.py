@@ -1,49 +1,59 @@
 
 import simple_draw as sd
 
+
+
 def home(width=1):
-    start_point = sd.get_point(500,100)
-    house_draw = sd.get_vector(start_point=start_point, length=250, angle=0, width=width)
-    house_draw.draw()
-    angel = 0
-    for i in range(3):
-        point = house_draw.end_point
-        angel += 90
-        house_draw = sd.get_vector(start_point=point, length=250, angle=angel,width=width)
-        house_draw.draw()
-        if angel == 270:
-            point = sd.get_point(500, 350)
-            angel = 45
-            roof_paint = sd.get_vector(start_point=point, length=178, angle=45,width=width)
-            roof_paint.draw()
-            angel -= 90
-            roof_paint = sd.get_vector(start_point=roof_paint.end_point, length=178, angle=angel,width=width)
-            roof_paint.draw()
-            continue
+    fist_point = sd.get_point(500, 20)
+    second_point = sd.get_point(1000,340)
+    sd.rectangle(left_bottom=fist_point, right_top=second_point, color=sd.COLOR_ORANGE, width=0)
+    # Оконтовка
+    sd.rectangle(left_bottom=fist_point, right_top=second_point, color=sd.COLOR_DARK_ORANGE, width=3)
+    # Кирпичи
+    next_line_y = 0
+    for bricks_line in range (1):
+        for bricks in range (8):
+            x_fistpoint_brick = 500
+            y_fistpoint_brick = 20 + next_line_y
+            x_secondpoint_brick = 550
+            y_secondpoint_brick = 40 + next_line_y
+            for brick_fist in range (10):
+                fist_point = sd.get_point(x_fistpoint_brick, y_fistpoint_brick)
+                second_point = sd.get_point(x_secondpoint_brick, y_secondpoint_brick)
+                sd.rectangle(left_bottom=fist_point, right_top=second_point, color=sd.COLOR_DARK_ORANGE, width=3)
+                x_fistpoint_brick += 50
+                x_secondpoint_brick +=50
+            x_fistpoint_brick_second = 525
+            y_fistpoint_brick_second = 40 + next_line_y
+            x_secondpoint_brick_second = 575
+            y_secondpoint_brick_second = 60 + next_line_y
+            for brick_second in range (9):
+                fist_point = sd.get_point(x_fistpoint_brick_second, y_fistpoint_brick_second)
+                second_point = sd.get_point(x_secondpoint_brick_second, y_secondpoint_brick_second)
+                sd.rectangle(left_bottom=fist_point, right_top=second_point, color=sd.COLOR_DARK_ORANGE, width=3)
+                x_fistpoint_brick_second += 50
+                x_secondpoint_brick_second += 50
 
-    start_point = sd.get_point(575,150)
-    window_draw = sd.get_vector(start_point=start_point, length=100, angle=0, width=width)
-    window_draw.draw()
-    window_draw = sd.get_vector(start_point=window_draw.end_point, length=150, angle=90, width=width)
-    window_draw.draw()
-    window_draw = sd.get_vector(start_point=window_draw.end_point, length=100, angle=180, width=width)
-    window_draw.draw()
-    window_draw = sd.get_vector(start_point=window_draw.end_point, length=150, angle=270, width=width)
-    window_draw.draw()
-
-    start_point = sd.get_point(575,225)
-    window_draw = sd.get_vector(start_point=start_point, length=100, angle=0, width=width)
-    window_draw.draw()
-
-    start_point = sd.get_point(625, 150)
-    window_draw = sd.get_vector(start_point=start_point, length=150, angle=90, width=width)
-    window_draw.draw()
-
-
-
-
-
-
-
-
-
+            next_line_y += 40
+    #Окно
+    fist_point_window = sd.get_point(675, 81)
+    second_point_window = sd.get_point(825,260)
+    sd.rectangle(left_bottom=fist_point_window, right_top=second_point_window, color=sd.COLOR_CYAN, width=0)
+    sd.rectangle(left_bottom=fist_point_window, right_top=second_point_window, color=sd.COLOR_DARK_ORANGE, width=6)
+    fist_point_window = sd.get_point(750, 81)
+    second_point_window = sd.get_point(750,260)
+    sd.line(start_point=fist_point_window,end_point=second_point_window, color=sd.COLOR_DARK_ORANGE,width=6)
+    fist_point_window = sd.get_point(675, 190)
+    second_point_window = sd.get_point(825, 190)
+    sd.line(start_point=fist_point_window, end_point=second_point_window, color=sd.COLOR_DARK_ORANGE, width=6)
+    #Крыша
+    fist_point_window = sd.get_point(450, 340)
+    second_point_window = sd.get_point(1050, 340)
+    therd_point_window = sd.get_point(750, 450)
+    roof_list = [fist_point_window,second_point_window,therd_point_window]
+    sd.polygon(point_list=roof_list, color=sd.COLOR_RED, width=0)
+    fist_point_window = sd.get_point(450, 340)
+    second_point_window = sd.get_point(1050, 340)
+    therd_point_window = sd.get_point(750, 450)
+    roof_list = [fist_point_window,second_point_window,therd_point_window]
+    sd.polygon(point_list=roof_list, color=sd.COLOR_DARK_RED, width=3)
