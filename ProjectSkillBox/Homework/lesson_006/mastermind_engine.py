@@ -1,7 +1,7 @@
 import random
 
 HIDDEN_NUMBER = int
-
+move_result = tuple
 
 def generated_hidden_number():
     global HIDDEN_NUMBER
@@ -25,13 +25,10 @@ def check_number(IMPORT_VALUE):
             counter_bulls += 1
         counter_function += 1
     counter_cows -= counter_bulls
-
-    print('Быков - ', counter_bulls)
-    print('Коров -', counter_cows)
     move_result = {'bulls': counter_bulls, 'cows': counter_cows}
-
-
-generated_hidden_number()
-print('hiden number  ', HIDDEN_NUMBER)
-check_number(IMPORT_VALUE= random.randint(1000, 9999))
+    if counter_bulls == len(IMPORT_VALUE):
+        print('Поздравляем! Вы угадали все числа!')
+        again = True
+        return again
+    return move_result
 
