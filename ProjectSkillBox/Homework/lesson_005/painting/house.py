@@ -17,17 +17,17 @@ def home(width=1):
             y_fistpoint_brick = 20 + next_line_y
             x_secondpoint_brick = 550
             y_secondpoint_brick = 40 + next_line_y
-            for brick_fist in range (10):
+            for brick_fist in range(10):
                 fist_point = sd.get_point(x_fistpoint_brick, y_fistpoint_brick)
                 second_point = sd.get_point(x_secondpoint_brick, y_secondpoint_brick)
                 sd.rectangle(left_bottom=fist_point, right_top=second_point, color=sd.COLOR_DARK_ORANGE, width=3)
                 x_fistpoint_brick += 50
-                x_secondpoint_brick +=50
+                x_secondpoint_brick += 50
             x_fistpoint_brick_second = 525
             y_fistpoint_brick_second = 40 + next_line_y
             x_secondpoint_brick_second = 575
             y_secondpoint_brick_second = 60 + next_line_y
-            for brick_second in range (9):
+            for brick_second in range(9):
                 fist_point = sd.get_point(x_fistpoint_brick_second, y_fistpoint_brick_second)
                 second_point = sd.get_point(x_secondpoint_brick_second, y_secondpoint_brick_second)
                 sd.rectangle(left_bottom=fist_point, right_top=second_point, color=sd.COLOR_DARK_ORANGE, width=3)
