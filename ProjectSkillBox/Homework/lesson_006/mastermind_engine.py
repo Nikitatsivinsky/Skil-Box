@@ -3,6 +3,7 @@ import random
 HIDDEN_NUMBER = int
 move_result = tuple
 
+
 def generated_hidden_number():
     global HIDDEN_NUMBER
     global number_list
@@ -12,12 +13,13 @@ def generated_hidden_number():
 
 def check_number(IMPORT_VALUE):
     global move_result
-    print('import number ', IMPORT_VALUE)
+    check_cows_list = list(str(HIDDEN_NUMBER))
     IMPORT_VALUE = list(str(IMPORT_VALUE))
     counter_cows = 0
     counter_bulls = 0
     for check_cows in IMPORT_VALUE:
-        if check_cows in number_list:
+        if check_cows in check_cows_list:
+            check_cows_list.remove(check_cows)
             counter_cows += 1
     counter_function = 0
     for check_bulls in number_list:

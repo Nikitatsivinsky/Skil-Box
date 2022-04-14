@@ -42,15 +42,6 @@
 # Движок игры реализует только саму функциональность игры.
 # Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
-#
-# 'grey',
-#             'red',
-#             'green',
-#             'yellow',
-#             'blue',
-#             'magenta',
-#             'cyan',
-#             'white',
 
 
 from mastermind_engine import generated_hidden_number, check_number
@@ -58,37 +49,76 @@ from termcolor import cprint
 
 cprint('\n\nПривет. Добро пожаловать в игру «Быки и коровы».', color='blue')
 cprint('Хочешь ознакомиться с правилами игры? Или сразу в бой?\n', color='blue')
-cprint('Напиши Да если хочешь ознакомиться с правилами \n'
-       'Или Нет и давай играть!', color='blue')
-go_or_rules = input()
-if go_or_rules == 'Да':
-    cprint(
-        'Компьютер загадывает четырехзначное число, все цифры которого различны (первая цифра числа отлична от нуля).\n'
-        'Игроку необходимо разгадать задуманное число.Игрок вводит четырехзначное число c неповторяющимися цифрами,\n'
-        'компьютер сообщают о количестве «быков» и «коров» в названном числе«бык» — цифра есть в записи задуманного \n'
-        'числа и стоит в той же позиции, что и в задуманном числе«корова» — цифра есть в записи задуманного числа, \n'
-        'но не стоит в той же позиции,что и в задуманном числеНапример, если задумано число 3275 и названо число \n'
-        '1234,получаем в названном числе одного «быка» и одну «корову».Очевидно, что число отгадано в том случае, \n'
-        'если имеем 4 «быка».', color='blue')
-    cprint('Продолжим?',color='blue')
-    go_or_rules = input()
-    if go_or_rules == 'Нет':
-        exit(cprint('Жалко... Закрываюсь...', color='blue'))
 
-cprint('Принял! Теперь я загадал число!', color='blue')
-generated_hidden_number()
-cprint('Ну что - же, отгадывай!\n\n', color='blue')
+
+def wellcome():
+    cprint('Напиши Да или Yes если хочешь ознакомиться с правилами \n'
+           'Или Нет или No и давай играть!', color='blue')
+    go_or_rules = input()
+    if go_or_rules == 'Да' or go_or_rules == 'Yes' or go_or_rules == 'да' or go_or_rules == 'yes' or go_or_rules == 'Д' \
+            or go_or_rules == 'Y' or go_or_rules == 'y' or go_or_rules == 'д':
+        cprint(
+            'Компьютер загадывает четырехзначное число.\n'
+            'Игроку необходимо разгадать задуманное число.\n'
+            'Игрок вводит любое четырехзначное число, компьютер сообщают о количестве «быков» и «коров» в названном '
+            'числе.\n'
+            '«Бык» — цифра есть в записи задуманного числа и стоит в той же позиции,что и в задуманном числе.\n'
+            '«Корова» — цифра есть в записи задуманного числа, но не стоит в той же позиции,что и в задуманном числе.\n'
+            'Пример:\n'
+            'Если компьютер загадал число 3275, а Игрок ввел число 1234, получаем в названном числе 1 «быка» и 1 '
+            '«корову».\n'
+            'Очевидно, что Игрок выигрывает в том случае, если имеем 4 «быка».', color='blue')
+        cprint('Продолжим?', color='blue')
+        go_or_rules = input()
+        if go_or_rules == 'Нет' or go_or_rules == 'No' or go_or_rules == 'нет' or go_or_rules == 'no' or go_or_rules == \
+                'Н' or go_or_rules == 'N' or go_or_rules == 'n' or go_or_rules == 'н':
+            exit(cprint('Жалко... Закрываюсь...', color='red'))
+        elif go_or_rules == 'Да' or go_or_rules == 'Yes' or go_or_rules == 'да' or go_or_rules == 'yes' or go_or_rules == 'Д' \
+                or go_or_rules == 'Y' or go_or_rules == 'y' or go_or_rules == 'д':
+            pass
+        else:
+            wellcome()
+    elif go_or_rules == 'Нет' or go_or_rules == 'No' or go_or_rules == 'нет' or go_or_rules == 'no' or go_or_rules == \
+            'Н' or go_or_rules == 'N' or go_or_rules == 'n' or go_or_rules == 'н':
+        pass
+    else:
+        wellcome()
+
+
+wellcome()
+
+
+def game():
+    cprint('Принял! Теперь я загадал число!', color='blue')
+    generated_hidden_number()
+    cprint('Ну что - же, отгадывай!', color='blue')
+
+    while True:
+        cprint('Какое число будешь проверять?', color='blue')
+        cprint('Или 1 для выхода.', color='blue')
+        IMPORT_VALUE = int(input())
+        if IMPORT_VALUE == 1:
+            exit(cprint('Жалко, До новых встреч! Made in China.', color='red'))
+        elif IMPORT_VALUE > 10000 or IMPORT_VALUE < 1111:
+            cprint('Загадай 4х значное число!', color='red')
+            IMPORT_VALUE = input()
+        if check_number(IMPORT_VALUE) == True:
+            break
+
+        else:
+            print('Коров - ', check_number(IMPORT_VALUE)['cows'], 'Быков - ', check_number(IMPORT_VALUE)['bulls'])
+
+        check_number(IMPORT_VALUE)
+
+
+game()
 
 while True:
-    cprint('Какое число будешь проверять?', color='blue')
-    IMPORT_VALUE = int(input())
-    check_number(IMPORT_VALUE)
-    if IMPORT_VALUE > 10000 or IMPORT_VALUE < 1111:
-        cprint('Загадай 4х значное число!', color='blue')
-        IMPORT_VALUE = input()
-    print('Коров - ', check_number()['cows'], 'Быков - ', check_number()['bulls'])
-    #TODO тупик с возвращением словаря коров и быков из check_number
-#TODO добавить игроков
-#TODO добавить окончание игры
-#TODO добавить функцию переиграть
-#TODO если игрок не хочет играть ещё раз добавить описание создателя
+    print('Играем ещё?')
+    play_again = input()
+    if play_again == 'Нет' or play_again == 'No' or play_again == 'нет' or play_again == 'no' or play_again == \
+            'Н' or play_again == 'N' or play_again == 'n' or play_again == 'н':
+        exit(cprint('Жалко, До новых встреч! Made in China.', color='red'))
+        break
+    else:
+        game()
