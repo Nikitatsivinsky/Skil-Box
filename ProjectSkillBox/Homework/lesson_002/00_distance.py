@@ -21,5 +21,3 @@ distances = {'Moscow' : distances_moscow , 'Paris' : distances_paris , 'London' 
 
 pprint(distances)
 
-
-

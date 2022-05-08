@@ -68,7 +68,7 @@ LENGTH_DRAW = 200
 
 
 def draw_branches(start_point, angle_draw, length_draw, delta=30):
-    if length_draw < 1:
+    if length_draw < 3:
         return
 
     vector = sd.get_vector(start_point=start_point, angle=angle_draw, length=length_draw, width=1)
