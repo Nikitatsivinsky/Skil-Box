@@ -82,8 +82,7 @@ class House:
             self.food, self.money)
 
 
-citizens = [
-    Man(name='Бивис'),
+citizens = [Man(name='Бивис'),
     Man(name='Батхед'),
     Man(name='Кенни'),
 ]
