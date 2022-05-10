@@ -35,40 +35,39 @@ class Human:
         self.energy = 100
 
     def __str__(self):
-        return 'Я - {}, сытость {}'.format(
-            self.name, self.fullness)
+        return 'Я - {}, сытость {}, энергия {}'.format(
+            self.name, self.fullness, self.energy)
 
     def eat(self):
         if self.house.food_human >= 10:
             cprint('{} поел'.format(self.name), color='yellow')
-            self.fullness += 10
-            self.house.food_human -= 10
-            self.energy += 40
+            self.fullness += randint(10, 20)
+            self.house.food_human -= randint(5, 15)
+            self.energy += randint(5, 15)
         else:
             cprint('{} нет еды'.format(self.name), color='red')
 
     def work(self):
         cprint('{} сходил на работу'.format(self.name), color='blue')
         self.house.money += 150
-        self.fullness -= 20
-        self.energy -= 40
+        self.fullness -= randint(5, 15)
+        self.energy -= randint(10, 35)
 
     def watch_MTV(self):
         cprint('{} смотрел MTV целый день'.format(self.name), color='green')
-        self.fullness -= 10
-        self.energy += 10
+        self.fullness -= randint(10, 20)
+        self.energy += randint(10, 20)
 
     def sleep(self):
-        cprint('{} энергия равна {}'.format(self.name, self.energy), color='green')
         cprint('{} устал и лег спать'.format(self.name), color='green')
-        self.energy += 100
+        self.energy += randint(40, 60)
 
     def shopping(self):
         if self.house.money >= 50:
             cprint('{} сходил в магазин за едой'.format(self.name), color='magenta')
             self.house.money -= 50
             self.house.food_human  += 50
-            self.energy -= 20
+            self.energy -= randint(10, 20)
         else:
             cprint('{} деньги кончились!'.format(self.name), color='red')
 
@@ -77,37 +76,41 @@ class Human:
             cprint('{} сходил в магазин за кормом'.format(self.name), color='magenta')
             self.house.money -= 50
             self.house.food_kitty += 50
-            self.energy -= 20
+            self.energy -= randint(10, 20)
         else:
             cprint('{} деньги кончились!'.format(self.name), color='red')
 
     def clean(self):
         if self.house.dust > 30:
             cprint('{} поубирал в доме'.format(self.name), color='magenta')
-            self.house.dust -= 70
-            self.fullness -= 20
-            self.energy -= 10
+            self.house.dust -= randint(50, 70)
+            self.fullness -= randint(5, 15)
+            self.energy -= randint(20, 30)
 
     def go_to_the_house(self, house):
         self.house = house
         self.fullness -= 10
-        self.energy -= 10
+        self.energy -= 20
         cprint('{} Вьехал в дом'.format(self.name), color='cyan')
 
     def act(self):
         if self.fullness <= 0:
             cprint('{} умер...'.format(self.name), color='red')
             return
+        if self.energy > 100:
+            self.energy = 100
+        if self.fullness > 100:
+            self.fullness = 100
         if self.fullness < 20:
             self.eat()
+        elif self.house.money < 50:
+            self.work()
         elif self.house.food_human < 20:
             self.shopping()
         elif self.house.food_kitty < 50:
             self.shopping_zoo()
         elif self.energy < 50:
             self.sleep()
-        elif self.house.money < 50:
-            self.work()
         elif self.house.dust > 30:
             self.clean()
         else:
@@ -122,43 +125,46 @@ class Kitty:
         self.energy = 100
 
     def __str__(self):
-        return 'Я - {}, сытость {}'.format(
-            self.name, self.fullness)
+        return 'Я кошка - {}, сытость {}, энергия {}'.format(
+            self.name, self.fullness, self.energy)
 
     def eat(self):
         if self.house.food_kitty >= 10:
-            cprint('{} поел'.format(self.name), color='yellow')
-            self.fullness += 20
-            self.house.food_kitty -= 10
-            self.energy += 5
+            cprint('Кошка {} поела'.format(self.name), color='yellow')
+            self.fullness += randint(15, 25)
+            self.house.food_kitty -= randint(5, 15)
+            self.energy += randint(20, 30)
         else:
-            cprint('{} нет еды'.format(self.name), color='red')
+            cprint('Для кошки {} нет еды'.format(self.name), color='red')
 
 
     def sleep(self):
-        cprint('{} энергия равна {}'.format(self.name,self.energy), color='green')
-        cprint('{} спит целый день'.format(self.name), color='green')
-        self.fullness -= 10
-        self.energy += 100
+        cprint('Кошка {} спит целый день'.format(self.name), color='green')
+        self.fullness -= randint(5, 15)
+        self.energy += randint(60, 90)
 
     def play(self):
-        cprint('{} опять дерет обои'.format(self.name), color='green')
-        self.fullness -= 20
-        self.energy -= 30
-        self.house.dust += 20
+        cprint('Кошка {} опять дерет обои'.format(self.name), color='green')
+        self.fullness -= randint(5, 15)
+        self.energy -= randint(40, 70)
+        self.house.dust += randint(10, 30)
 
 
     def go_to_the_house(self, house):
         self.house = house
-        self.fullness -= 10
-        self.energy -= 10
+        self.fullness -= randint(5, 15)
+        self.energy -= randint(5, 15)
         cprint('Подобрал, кота {}.'.format(self.name), color='cyan')
-        cprint('Добро пожпловать в семью!.'.format(), color='cyan')
 
     def act(self):
         if self.fullness <= 0:
-            cprint('{} умер...'.format(self.name), color='red')
+            cprint('Кошка {} умерла...'.format(self.name), color='red')
             return
+        if self.energy > 100:
+            self.energy = 100
+        if self.fullness > 100:
+            self.fullness = 100
+
         if self.fullness < 20:
             self.eat()
         elif self.energy < 20:
@@ -180,20 +186,31 @@ class House:
             self.food_human, self.food_kitty, self.money,self.dust)
 
 
-citizens = [Man(name='Борис')]
+
+tenants = [Human(name='Борис'),
+           Kitty(name='Манька'),
+           Kitty(name='Клара')
+           ]
+          # Kitty(name='Батхед'),
+          # Kitty(name='Кенни'),
+          # ]
 
 
 my_sweet_home = House()
-for citisen in citizens:
-    citisen.go_to_the_house(house=my_sweet_home)
+for person in tenants:
+    person.go_to_the_house(house=my_sweet_home)
+
+cprint('Добро пожпловать в семью!'.format(), color='cyan')
 
 for day in range(1, 366):
     print('================ день {} =================='.format(day))
-    for citisen in citizens:
-        citisen.act()
+
+    for person in tenants:
+        person.act()
+
     print('--- в конце дня ---')
-    for citisen in citizens:
-        print(citisen)
+    for person in tenants:
+        print(person)
     print(my_sweet_home)
 
 # Усложненное задание (делать по желанию)
