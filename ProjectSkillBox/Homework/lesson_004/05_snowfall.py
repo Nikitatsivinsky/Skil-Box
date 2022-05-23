@@ -15,7 +15,6 @@ list_coordinates = []
 length_snow = []
 abc_list = []
 
-
 fallen_list = []
 snowflakes_fallen_lengths = []
 abc_list_fallen = []
@@ -25,6 +24,9 @@ for counter in range(N):
     length_snow.append(sd.random_number(20, 70))
     abc_list.append([round(random.uniform(0.3, 1), 1), round(random.uniform(0.15, 0.55), 2), sd.random_number(50, 70)])
 
+print(list_coordinates)
+print(length_snow)
+print(abc_list)
 
 while True:
     for i in range(N):
@@ -32,9 +34,6 @@ while True:
         sd.start_drawing()
         sd.snowflake(center=point, length=length_snow[i], color=sd.background_color, factor_a=abc_list[i][0],
                      factor_b=abc_list[i][1], factor_c=abc_list[i][2])
-
-        # factor_a = 0.6, factor_b = 0.35, factor_c = 60
-
 
         if list_coordinates[i][1] >= length_snow[i]:
             list_coordinates[i][1] -= sd.randint(20, 40)
@@ -46,7 +45,7 @@ while True:
 
             point2 = sd.get_point(list_coordinates[i][0], list_coordinates[i][1])
             sd.snowflake(center=point2, length=length_snow[i], color=sd.COLOR_WHITE, factor_a=abc_list[i][0],
-                    factor_b=abc_list[i][1], factor_c=abc_list[i][2])
+                         factor_b=abc_list[i][1], factor_c=abc_list[i][2])
 
         else:
             fallen_list.append([list_coordinates[i][0], list_coordinates[i][1]])
@@ -59,28 +58,20 @@ while True:
             length_snow.pop(i)
             abc_list.pop(i)
 
-
             length_snow.append(sd.random_number(20, 70))
             list_coordinates.append([sd.randint(0, 1200), 800 + 50])
             abc_list_fallen.append([round(random.uniform(0.3, 1), 1), round(random.uniform(0.15, 0.55), 2),
                                     sd.random_number(50, 70)])
-
-
 
         for i in range(len(fallen_list)):
             point = sd.get_point(fallen_list[i][0], fallen_list[i][1])
             sd.snowflake(center=point, length=snowflakes_fallen_lengths[i], color=sd.COLOR_WHITE,
                          factor_a=abc_list[i][0], factor_b=abc_list[i][1], factor_c=abc_list[i][2])
 
-
         sd.finish_drawing()
         sd.sleep(0.1)
         if sd.user_want_exit():
             break
-
-
-
-
 
 # подсказка! для ускорения отрисовки можно
 #  - убрать clear_screen()

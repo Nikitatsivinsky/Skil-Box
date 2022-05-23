@@ -1,22 +1,31 @@
-input_value = input()
+class Human():
+    def __init__(self, name):
+        self.name = name
 
 
-def summa(result_sum=0):
-    for i in input_value:
-        result_sum += int(i)
-    return result_sum
 
 
-def product():
-    result_product = 0
-    value = []
-    for i in [len(input_value)]:
-        for i in input_value:
-            value.extend(i)
-        for i in range(len(input_value)):
-            result_product = result_product * int(value[int(i)])
-    return result_product
+tenants_list = ['Борис',
+            'Манька',
+            'Клара',
+            'Батхед'
+           ]
+
+           # Kitty(name='Клара'),
+           # Kitty(name='Батхед'),
+           # Kitty(name='Кенни'),
+           # Kitty(name='Кенни'),
+          # ]
+teants = []
+counter_persons = 0
+for person in tenants_list:
+    if counter_persons < 2:
+        x = Human(name=person)
+        teants.append(x)
+        counter_persons += 1
+
+print(tenants_list)
+print(teants)
 
 
-print('Сумма цифр = {}'.format(summa()))
-print('Произведение цифр = {}'.format(product()))
+
