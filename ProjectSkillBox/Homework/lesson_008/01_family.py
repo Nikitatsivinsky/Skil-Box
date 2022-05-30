@@ -61,6 +61,19 @@ class Human:
     def __str__(self):
         return 'Я {} , сытость {}, счастье {}'.format(self.name, self.fullness, self.smile)
 
+    def eat(self):
+        if House.food > 0:
+            eat_act = randint(15, 30)
+            if House.food < eat_act:
+                House.food = 0
+                self.fullness += House.food
+                print('{} доел/-а остатки еды в доме!'.format(self.name))
+            House.food -= eat_act
+            self.fullness += eat_act
+            print('{} покушал/-а {} еды!'.format(self.name, eat_act))
+        else:
+            print('{} умерл/-а от нехватки еды!'.format(self.name))
+            exit()
 
 class Husband(Human, House):
 
@@ -77,22 +90,6 @@ class Husband(Human, House):
             self.work()
         else:
             self.gaming()
-
-    def eat(self):
-        if House.food > 0:
-            eat_act = randint(15, 30)
-            if House.food < eat_act:
-                House.food = 0
-                self.fullness += House.food
-                print('{} доел остатки еды в доме!'.format(self.name))
-            House.food -= eat_act
-            self.fullness += eat_act
-            print('{} покушал {} еды!'.format(self.name, eat_act))
-        else:
-            print('{} умер от нехватки еды!'.format(self.name))
-            exit()
-
-
 
     def work(self):
         self.fullness -= 10
@@ -133,20 +130,6 @@ class Wife(Human, House):
         else:
             self.buy_fur_coat()
 
-    def eat(self):
-        if House.food > 0:
-            eat_act = randint(15, 30)
-            if House.food < eat_act:
-                House.food = 0
-                self.fullness += House.food
-                print('{} доела остатки еды в доме!'.format(self.name))
-            House.food -= eat_act
-            self.fullness += eat_act
-            print('{} покушала {} еды!'.format(self.name, eat_act))
-        else:
-            print('{} умерла от нехватки еды!'.format(self.name))
-            exit()
-
 
     def shopping(self):
         self.fullness -= 10
@@ -184,17 +167,55 @@ class Wife(Human, House):
         print('{} поубирала в квартире!'.format(self.name))
 
 
+class Child(Human, House):
+
+    def __init__(self, name):
+        super().__init__(name=name)
+        self.smile = 100
+
+    def __str__(self):
+        return super().__str__()
+
+    def act(self):
+        if self.fullness < 7:
+            self.eat()
+        else:
+            self.sleep()
+
+
+    def eat(self):
+        if House.food > 0:
+            eat_act = randint(7, 10)
+            if House.food < eat_act:
+                House.food = 0
+                self.fullness += House.food
+                print('Ребёнок {} доел/-а остатки еды в доме!'.format(self.name))
+            House.food -= eat_act
+            self.fullness += eat_act
+            print('Ребёнок {} покушал/-а {} еды!'.format(self.name, eat_act))
+        else:
+            print('Ребёнок {} умерл/-а от нехватки еды!'.format(self.name))
+            exit()
+
+    def sleep(self):
+        self.fullness -= randint(5, 7)
+        print('Ребёнок {} cпит!'.format(self.name))
+
+
 home = House()
 serge = Husband(name='Сережа')
 masha = Wife(name='Маша')
+evgen = Child(name='Женя')
 
 for day in range(366):
     House.dust += 5
     cprint('================== День {} =================='.format(day), color='red')
     serge.act()
     masha.act()
+    evgen.act()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
+    cprint(evgen, color='cyan')
     cprint(home, color='blue')
 
 ######################################################## Часть вторая
@@ -222,47 +243,22 @@ for day in range(366):
 # Если кот дерет обои, то грязи становится больше на 5 пунктов
 
 
-class Cat:
-
-    def __init__(self):
-        pass
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def sleep(self):
-        pass
-
-    def soil(self):
-        pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# class Cat:
+#
+#     def __init__(self):
+#         pass
+#
+#     def act(self):
+#         pass
+#
+#     def eat(self):
+#         pass
+#
+#     def sleep(self):
+#         pass
+#
+#     def soil(self):
+#         pass
 
 
 ######################################################## Часть вторая бис
@@ -276,22 +272,22 @@ class Cat:
 # отличия от взрослых - кушает максимум 10 единиц еды,
 # степень счастья  - не меняется, всегда ==100 ;)
 
-class Child:
-
-    def __init__(self):
-        pass
-
-    def __str__(self):
-        return super().__str__()
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def sleep(self):
-        pass
+# class Child:
+#
+#     def __init__(self):
+#         pass
+#
+#     def __str__(self):
+#         return super().__str__()
+#
+#     def act(self):
+#         pass
+#
+#     def eat(self):
+#         pass
+#
+#     def sleep(self):
+#         pass
 
 
 # TODO после реализации второй части - отдать на проверку учителем две ветки
