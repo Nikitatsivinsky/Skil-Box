@@ -44,22 +44,24 @@ from random import randint
 
 class House:
     money = 100
-    food = 60
+    food = 50
     dust = 0
 
-    def __init__(self):
-        self.money = 100
-        self.food = 60
-        self.dust = 0
+    def __str__(self):
+        return 'В доме: денег - {}, еды - {}, грязи - {}.'.format(self.money, self.food, self.dust)
+
 
 class Human:
     fullness = 30
     smile = 100
+
     def __init__(self, name):
         self.fullness = 30
         self.smile = 100
         self.name = name
 
+    def __str__(self):
+        return 'Я {} , сытость {}, счастье {}'.format(self.name, self.fullness, self.smile)
 
 
 class Husband(Human, House):
@@ -68,13 +70,12 @@ class Husband(Human, House):
         super().__init__(name=name)
 
     def __str__(self):
-        print('Я {} , сытость {}, счастье {}'.format(self.name, self.fullness, self.smile))
         return super().__str__()
 
     def act(self):
         if self.fullness < 30:
             self.eat()
-        elif self.money < 100:
+        elif House.money < 100:
             self.work()
         else:
             self.gaming()
@@ -84,23 +85,25 @@ class Husband(Human, House):
             print('{} умер от нехватки еды!'.format(self.name))
             return
         eat_act = randint(15, 30)
-        self.food -= eat_act
+        House.food -= eat_act
         self.fullness += eat_act
+        print('{} покушал {} еды!'.format(self.name, eat_act))
 
     def work(self):
         self.fullness -= 10
-        self.money += 150
+        House.money += 150
         print('{} сходил на работу!'.format(self.name))
 
     def gaming(self):
+        self.fullness -= 10
         if self.smile > 100:
             self.smile = 100
+            print('{} играл целый день в танки!'.format(self.name))
             return
         if self.smile < 0:
             print('{} умер от депрессии!'.format(self.name))
             return
         elif self.smile > 0:
-            self.fullness -= 10
             self.smile += 20
             print('{} играл целый день в танки!'.format(self.name))
 
@@ -111,15 +114,14 @@ class Wife(Human, House):
         super().__init__(name=name)
 
     def __str__(self):
-        print('Я {} , сытость {}, счастье {}'.format(self.name, self.fullness, self.smile))
         return super().__str__()
 
     def act(self):
         if self.fullness < 30:
             self.eat()
-        elif self.food < 60:
+        elif House.food < 60:
             self.shopping()
-        elif self.dust > 60:
+        elif House.dust > 60:
             self.clean_house()
         else:
             self.buy_fur_coat()
@@ -129,45 +131,50 @@ class Wife(Human, House):
             print('{} умерла от нехватки еды!'.format(self.name))
             return
         eat_act = randint(15, 30)
-        self.food -= eat_act
+        House.food -= eat_act
         self.fullness += eat_act
+        print('{} покушала {} еды!'.format(self.name, eat_act))
 
     def shopping(self):
         self.fullness -= 10
-        food = randint(60, 150)
-        self.food += food
-        self.money -= food
+        food_parametr = randint(60, 150)
+        House.food += food_parametr
+        House.money -= food_parametr
         print('{} сходила за покупками!'.format(self.name))
 
     def buy_fur_coat(self):
+        self.fullness -= 10
         if self.smile < 0:
             print('{} умерла от депрессии!'.format(self.name))
             return
-        self.fullness -= 10
-        if self.money > 410:
+        if House.money > 410:
             self.smile += 60
-            self.money -= 350
+            House.money -= 350
             print('{} купила себе шубу!'.format(self.name))
         else:
             print('{} пошла покупать себе шубу, но она слишком дорогая!'.format(self.name))
 
     def clean_house(self):
         self.fullness -= 10
-        dust = randint(80,100)
-        self.dust -= dust
+        dust_parametr = randint(80, 100)
+        House.dust -= dust_parametr
+        if House.dust < 0:
+            House.dust = 0
         print('{} поубирала в квартире!'.format(self.name))
+
 
 home = House()
 serge = Husband(name='Сережа')
 masha = Wife(name='Маша')
 
-for day in range(365):
+for day in range(366):
+    House.dust += 5
     cprint('================== День {} =================='.format(day), color='red')
     serge.act()
     masha.act()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
-    cprint(home, color='cyan')
+    cprint(home, color='blue')
 
 # TODO после реализации первой части - отдать на проверку учителю
 
