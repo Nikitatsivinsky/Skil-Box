@@ -46,6 +46,7 @@ class House:
     money = 100
     food = 50
     dust = 0
+    cat_food =
 
     def __str__(self):
         return 'В доме: денег - {}, еды - {}, грязи - {}.'.format(self.money, self.food, self.dust)
@@ -183,6 +184,38 @@ class Wife(Human, House):
             House.dust = 0
         print('{} поубирала в квартире!'.format(self.name))
 
+class Cat:
+
+    def __init__(self, name):
+        self.fullness = 30
+        super().__init__(name=name)
+
+    def __str__(self):
+        return 'Я {} , сытость {}'.format(self.name, self.fullness, )
+
+    def act(self):
+        pass
+
+    def eat(self):
+        if House.cat_food > 0:
+            eat_act = randint(15, 30)
+            if House.cat_food  < eat_act:
+                House.food = 0
+                self.fullness += House.cat_food
+                print('{} доела остатки еды в доме!'.format(self.name))
+            House.cat_food  -= eat_act
+            self.fullness += eat_act
+            print('{} покушала {} еды!'.format(self.name, eat_act))
+        else:
+            print('{} умерла от нехватки еды!'.format(self.name))
+            exit()
+
+    def sleep(self):
+        pass
+
+    def soil(self):
+        pass
+
 
 home = House()
 serge = Husband(name='Сережа')
@@ -220,48 +253,6 @@ for day in range(366):
 # Степень сытости не должна падать ниже 0, иначе кот умрет от голода.
 #
 # Если кот дерет обои, то грязи становится больше на 5 пунктов
-
-
-class Cat:
-
-    def __init__(self):
-        pass
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def sleep(self):
-        pass
-
-    def soil(self):
-        pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
