@@ -46,10 +46,11 @@ class House:
     money = 100
     food = 50
     dust = 0
-    cat_food =
+    cat_food = 30
 
     def __str__(self):
-        return 'В доме: денег - {}, еды - {}, грязи - {}.'.format(self.money, self.food, self.dust)
+        return 'В доме: денег - {}, еды - {}, корма - {}, грязи - {}.'.format(self.money, self.food,
+                                                                              self.cat_food,self.dust)
 
 
 class Human:
@@ -61,6 +62,13 @@ class Human:
 
     def __str__(self):
         return 'Я {} , сытость {}, счастье {}'.format(self.name, self.fullness, self.smile)
+
+    def cat_stroking(self):
+        print('{} погладил/-а кошку {}!'.format(self.name, murka.name))
+        self.smile += 5
+
+        if self.smile > 100:
+            self.smile = 100
 
 
 class Husband(Human, House):
@@ -79,6 +87,10 @@ class Husband(Human, House):
         else:
             self.gaming()
 
+        randomizer_cat_stroking = randint(1, 4)
+        if randomizer_cat_stroking == 2:
+            self.cat_stroking()
+
     def eat(self):
         if House.food > 0:
             eat_act = randint(15, 30)
@@ -92,8 +104,6 @@ class Husband(Human, House):
         else:
             print('{} умер от нехватки еды!'.format(self.name))
             exit()
-
-
 
     def work(self):
         self.fullness -= 10
@@ -127,12 +137,16 @@ class Wife(Human, House):
 
         if self.fullness < 30:
             self.eat()
-        elif House.food < 70:
+        elif House.food < 70 or House.cat_food < 20:
             self.shopping()
         elif House.dust > 60:
             self.clean_house()
         else:
             self.buy_fur_coat()
+
+        randomizer_cat_stroking = randint(1, 4)
+        if randomizer_cat_stroking == 2:
+            self.cat_stroking()
 
     def eat(self):
         if House.food > 0:
@@ -151,18 +165,33 @@ class Wife(Human, House):
 
     def shopping(self):
         self.fullness -= 10
-        food_parametr = randint(90, 150)
-        if House.money >= food_parametr:
-            House.food += food_parametr
-            House.money -= food_parametr
-            print('{} сходила за покупками!'.format(self.name))
-        elif House.money > 0:
-            House.food += House.money
-            House.money = 0
-            print('{} купила продукты на последние деньги!'.format(self.name))
 
-        else:
-            print('{} пошла за покупками, но не хватило денег!'.format(self.name))
+        if House.food < 70:
+            food_parametr = randint(90, 150)
+            if House.money >= food_parametr:
+                House.food += food_parametr
+                House.money -= food_parametr
+                print('{} сходила за покупками!'.format(self.name))
+            elif House.money > 0:
+                House.food += House.money
+                House.money = 0
+                print('{} купила продукты на последние деньги!'.format(self.name))
+
+            else:
+                print('{} пошла за покупками, но не хватило денег!'.format(self.name))
+
+        if House.cat_food < 20:
+            cat_food_parametr = randint(30, 70)
+            if House.money >= cat_food_parametr:
+                House.cat_food += cat_food_parametr
+                House.money -= cat_food_parametr
+                print('{} купила кошке корм!'.format(self.name))
+            elif House.money > 0:
+                House.cat_food += House.money
+                House.money = 0
+                print('{} купила кошке корм на последние деньги!'.format(self.name))
+            else:
+                print('{} не хватило денег на корм!'.format(self.name))
 
     def buy_fur_coat(self):
         self.fullness -= 10
@@ -184,51 +213,70 @@ class Wife(Human, House):
             House.dust = 0
         print('{} поубирала в квартире!'.format(self.name))
 
+
 class Cat:
 
     def __init__(self, name):
+        self.name = name
         self.fullness = 30
-        super().__init__(name=name)
 
     def __str__(self):
-        return 'Я {} , сытость {}'.format(self.name, self.fullness, )
+        return 'Я кошка {} , сытость {}'.format(self.name, self.fullness, )
 
     def act(self):
-        pass
+        if self.fullness < 15:
+            self.eat()
+        else:
+            cat_randomizer = randint(1, 2)
+            if cat_randomizer == 1:
+                self.sleep()
+            else:
+                self.soil()
 
     def eat(self):
+
+        if self.fullness <= 0:
+            print('Кошка {} умерла от нехватки еды!'.format(self.name))
+            exit()
+
         if House.cat_food > 0:
-            eat_act = randint(15, 30)
+            eat_act = randint(7, 10)
             if House.cat_food  < eat_act:
                 House.food = 0
-                self.fullness += House.cat_food
-                print('{} доела остатки еды в доме!'.format(self.name))
-            House.cat_food  -= eat_act
-            self.fullness += eat_act
-            print('{} покушала {} еды!'.format(self.name, eat_act))
+                self.fullness += House.cat_food * 2
+                print('Кошка {} доела остатки еды в доме!'.format(self.name))
+            House.cat_food -= eat_act
+            self.fullness += eat_act * 2
+            print('Кошка {} покушала {} еды!'.format(self.name, eat_act))
         else:
-            print('{} умерла от нехватки еды!'.format(self.name))
+            print('Кошка {} умерла от нехватки еды!'.format(self.name))
             exit()
 
     def sleep(self):
-        pass
+        self.fullness -= randint(7, 10)
+        print('Кошка {} cпит!'.format(self.name))
 
     def soil(self):
-        pass
-
+        self.fullness -= randint(7, 10)
+        House.dust += 5
+        print('Кошка {} дерёт обои!'.format(self.name))
 
 home = House()
 serge = Husband(name='Сережа')
 masha = Wife(name='Маша')
+murka = Cat(name='Мурка')
 
 for day in range(366):
     House.dust += 5
     cprint('================== День {} =================='.format(day), color='red')
     serge.act()
     masha.act()
+    murka.act()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
+    cprint(murka, color='magenta')
     cprint(home, color='blue')
+
 
 ######################################################## Часть вторая
 #
@@ -241,7 +289,7 @@ for day in range(366):
 #   драть обои
 #
 # Люди могут:
-#   гладить кота (растет степень счастья на 5 пунктов)
+# гладить кота (растет степень счастья на 5 пунктов)
 #
 # В доме добавляется:
 #   еда для кота (в начале - 30)
