@@ -56,8 +56,6 @@ class Human:
     smile = 100
 
     def __init__(self, name):
-        self.fullness = 30
-        self.smile = 100
         self.name = name
 
     def __str__(self):
@@ -81,13 +79,20 @@ class Husband(Human, House):
             self.gaming()
 
     def eat(self):
-        if self.fullness < 0:
+        if House.food > 0:
+            eat_act = randint(15, 30)
+            if House.food < eat_act:
+                House.food = 0
+                self.fullness += House.food
+                print('{} доел остатки еды в доме!'.format(self.name))
+            House.food -= eat_act
+            self.fullness += eat_act
+            print('{} покушал {} еды!'.format(self.name, eat_act))
+        else:
             print('{} умер от нехватки еды!'.format(self.name))
-            return
-        eat_act = randint(15, 30)
-        House.food -= eat_act
-        self.fullness += eat_act
-        print('{} покушал {} еды!'.format(self.name, eat_act))
+            exit()
+
+
 
     def work(self):
         self.fullness -= 10
@@ -96,16 +101,15 @@ class Husband(Human, House):
 
     def gaming(self):
         self.fullness -= 10
-        if self.smile > 100:
-            self.smile = 100
-            print('{} играл целый день в танки!'.format(self.name))
-            return
-        if self.smile < 0:
+        if self.smile < 1:
             print('{} умер от депрессии!'.format(self.name))
-            return
+            exit()
         elif self.smile > 0:
             self.smile += 20
             print('{} играл целый день в танки!'.format(self.name))
+        if self.smile > 100:
+            self.smile = 100
+            return
 
 
 class Wife(Human, House):
@@ -117,9 +121,12 @@ class Wife(Human, House):
         return super().__str__()
 
     def act(self):
+        if House.dust > 90:
+            self.smile -= 10
+
         if self.fullness < 30:
             self.eat()
-        elif House.food < 60:
+        elif House.food < 70:
             self.shopping()
         elif House.dust > 60:
             self.clean_house()
@@ -127,26 +134,40 @@ class Wife(Human, House):
             self.buy_fur_coat()
 
     def eat(self):
-        if self.fullness < 0:
+        if House.food > 0:
+            eat_act = randint(15, 30)
+            if House.food < eat_act:
+                House.food = 0
+                self.fullness += House.food
+                print('{} доела остатки еды в доме!'.format(self.name))
+            House.food -= eat_act
+            self.fullness += eat_act
+            print('{} покушала {} еды!'.format(self.name, eat_act))
+        else:
             print('{} умерла от нехватки еды!'.format(self.name))
-            return
-        eat_act = randint(15, 30)
-        House.food -= eat_act
-        self.fullness += eat_act
-        print('{} покушала {} еды!'.format(self.name, eat_act))
+            exit()
+
 
     def shopping(self):
         self.fullness -= 10
-        food_parametr = randint(60, 150)
-        House.food += food_parametr
-        House.money -= food_parametr
-        print('{} сходила за покупками!'.format(self.name))
+        food_parametr = randint(90, 150)
+        if House.money >= food_parametr:
+            House.food += food_parametr
+            House.money -= food_parametr
+            print('{} сходила за покупками!'.format(self.name))
+        elif House.money > 0:
+            House.food += House.money
+            House.money = 0
+            print('{} купила продукты на последние деньги!'.format(self.name))
+
+        else:
+            print('{} пошла за покупками, но не хватило денег!'.format(self.name))
 
     def buy_fur_coat(self):
         self.fullness -= 10
-        if self.smile < 0:
+        if self.smile < 1:
             print('{} умерла от депрессии!'.format(self.name))
-            return
+            exit()
         if House.money > 410:
             self.smile += 60
             House.money -= 350
