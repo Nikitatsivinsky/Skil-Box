@@ -26,30 +26,23 @@
 import os
 import zipfile as zfile
 
+
 class Import:
 
     def __init__(self, file_name):
-
         self.file_name = file_name
 
-        if self.file_name.endswith('.zip'):
-            print(f"Обнаружен: Zip Архив.")
-            self.z_files(file_name)
-            file_name = os.path.join(os.path.dirname(__file__), self.file_name)
 
-        self.Open_File(file_name)
-
-    def Open_File(self, file_name):
-        file = open(self.file_name, 'r')
-        file.encode('utf8')
-        for line in file:
-            print(line)
-
-        # file = open(file=file_name, mode='r', encoding="cp1251")
-        # for line in file:
-        #     print(line)
+    def Open_File(self):
+        file = open(file=self.file_name, mode='r', encoding='cp1251')
+        number_operation = Number_Operation(file_name=file)
+        number_operation.collect()
 
     def z_files(self, file_name):
+        if self.file_name.endswith('.zip'):
+            print(f"Обнаружен: Zip Архив.")
+        self.z_files(file_name)
+        file_name = os.path.join(os.path.dirname(__file__), self.file_name)
         z_file = zfile.ZipFile(file_name, 'r')
         for filename in z_file.namelist():
             print(f"Обнаружен в Zip Архиве файл: {filename}")
@@ -57,20 +50,80 @@ class Import:
                 print(f"Расспаковка из Zip Архива текстового файла: {filename}")
                 file_name = filename
                 z_file.extract(file_name)
+                self.file_name = filename
         return file_name
 
 
-class Number_Operation:
+class Number_Operation (Import):
+
+    def __init__(self, file_name):
+        self.analize_count = 4
+        self.file = file_name
+        self.stat = {}
+
+    def collect(self): #Гениратор самих строчек
+        self.sequence = ' ' * self.analize_count
+        with self.file as file_line:
+            # for line in file_line:
+            #     self._collect_for_line(line=line[:-1])
+
+    def _collect_for_line(self, line): #Строчки Лев Николаевич Толстой по буквам
+        # for char in line:
+        #     if char
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # def prepare(self):
+    #     self.totals = {}
+    #     self.stat_for_generate = {}
+    #     for sequence, char_stat in self.stat.items():
+    #         self.totals[sequence] = 0
+    #         self.stat_for_generate[sequence] = []
+    #         for char, count in char_stat.items():
+    #             self.totals[sequence] += count
+    #             self.stat_for_generate[sequence].append([count, char])
+    #             self.stat_for_generate[sequence].sort(reverse=True)
+    #     print(f"self.totals = {self.totals}")
+    #     # print(f"self.stat_for_generate = {self.stat_for_generate}")
+    #     # print(f"self.stat IN PREPARE = {self.stat}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Print_Result (Import):
     pass
 
-class Print_Result:
-    pass
 
 
 
-
-voyna_i_mir = Import(file_name='/home/niki/PycharmProjects/Skil-Box2/ProjectSkillBox/'
+file = Import(file_name='/home/niki/PycharmProjects/Skil-Box2/ProjectSkillBox/'
                                'Homework/lesson_009/python_snippets/voyna-i-mir.txt.zip')
+file.Open_File()
+
 
 
 
