@@ -19,54 +19,180 @@
 # Входные параметры: файл для анализа, файл результата
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
 
-
-class OpenFile():
-    def __init__(self, file_name):
-        self.file_name = file_name
-
-    def open_file(self):
-        result_analized = Analized(OpenFile)
-        with open(file=self.file_name, mode='r', encoding="utf8") as file:
-            for line in file:
-                result_analized.analized(line=line, file_name=self.file_name)
-
-
-class Analized(OpenFile):
-    log_event_counter = 0
-    log_list = {'time_event': 0, 'counter': 0}
-    prev_log_time = None
-
-    def analized(self, line, file_name):
-        if "NOK" in line:
-            log_time = line[1:17]
-
-            if log_time == self.prev_log_time:
-                self.log_list['time_event'] = log_time
-                self.log_list['counter'] += 1
-            else:
-                self.Result_to_TXT(self.log_list, file_name)
-                self.log_list['time_event'] = log_time
-                self.log_list['counter'] = 1
-
-            self.prev_log_time = log_time
-
-    def Result_to_TXT(self, log_list, file_name):
-        result_txt_file_name = 'result.txt'
-        with open(result_txt_file_name, mode='a', encoding='utf8') as file:
-            if log_list['time_event'] == 0:
-                file.write(f"{'*' * 10} Start Analyzing file {file_name}!{'*' * 10}\n\n")
-            else:
-                file.write('[' + str(log_list['time_event']) + ']' + '  ' + str(log_list['counter']) + '\n')
-
-        return
-
-
-open_file = OpenFile(file_name="events.txt")
-open_file.open_file()
-
+#
+# import time
+#
+# class OpenFile():
+#     def __init__(self, file_name):
+#         self.file_name = file_name
+#
+#     def open_file(self):
+#         result_analized = Analized(OpenFile)
+#         with open(file=self.file_name, mode='r', encoding="utf8") as file:
+#             for line in file:
+#                 result_analized.analized(line=line, file_name=self.file_name)
+#
+#
+# class Analized(OpenFile):
+#     log_event_counter = 0
+#     log_list = {'time_event': 0, 'counter': 0}
+#     prev_log_time = None
+#
+#     def analized(self, line, file_name):
+#         if "NOK" in line:
+#             log_time = line[1:17]
+#
+#             if log_time == self.prev_log_time:
+#                 self.log_list['time_event'] = log_time
+#                 self.log_list['counter'] += 1
+#             else:
+#                 self.Result_to_TXT(self.log_list, file_name)
+#                 self.log_list['time_event'] = log_time
+#                 self.log_list['counter'] = 1
+#
+#             self.prev_log_time = log_time
+#
+#
+#
+#
+#     def Result_to_TXT(self, log_list, file_name):
+#         result_txt_file_name = 'result.txt'
+#         with open(result_txt_file_name, mode='a', encoding='utf8') as file:
+#             if log_list['time_event'] == 0:
+#                 file.write(f"{'*' * 10} Start Analyzing file {file_name}!{'*' * 10}\n\n")
+#             else:
+#                 file.write('[' + str(log_list['time_event']) + ']' + '  ' + str(log_list['counter']) + '\n')
+#                 time_value = time.strptime(str(log_list['time_event']), "%Y-%m-%d %H:%M")
+#         return
+#
+# open_file = OpenFile(file_name="events.txt")
+# open_file.open_file()
+#
 
 # После выполнения первого этапа нужно сделать группировку событий
 #  - по часам
 #  - по месяцу
 #  - по году
 # Для этого пригодится шаблон проектирование "Шаблонный метод" см https://goo.gl/Vz4828
+
+
+
+import time
+
+
+class OpenFile():
+    def __init__(self, file_name, flag_mode):
+        self.file_name = file_name
+        self.flag_mode = flag_mode
+
+    def open_file(self):
+        result_analized = Analized(self.file_name, self.flag_mode)
+        with open(file=self.file_name, mode='r', encoding="utf8") as file:
+            for line in file:
+                result_analized.analized(line=line)
+
+
+class Analized(OpenFile):
+
+    def __init__(self, file_name, flag_mode):
+        super().__init__(file_name, flag_mode)
+        self.log_event_counter = 0
+        self.log_list = {'time_event': 0, 'counter': 0}
+        self.prev_log_time = None
+
+    def analized(self, line):
+        if "NOK" in line:
+            log_time = line[1:17]
+            time_value = time.strptime(str(log_time), "%Y-%m-%d %H:%M")
+
+            if self.flag_mode == 1:
+                mode = SortedByMinute(self.file_name, self.flag_mode)
+                mode.standart(prev_log_time=self.prev_log_time,
+                              log_list=self.log_list,
+                              line=line,
+                              file_name=self.file_name)
+            elif self.flag_mode == 2:
+                mode = SortedByHour(self.file_name, self.flag_mode)
+                mode.by_hour(prev_log_time=self.prev_log_time,
+                              log_list=self.log_list,
+                              line=line,
+                              file_name=self.file_name)
+            elif self.flag_mode == 3:
+                mode = SortedByMonth()
+                mode.by_month()
+            elif self.flag_mode == 4:
+                mode = SortedByYear()
+                mode.by_year()
+
+
+            self.prev_log_time = time_value
+
+    def Result_to_TXT(self, log_list):
+        result_txt_file_name = 'result.txt'
+        with open(result_txt_file_name, mode='a', encoding='utf8') as file:
+            if log_list['time_event'] == 0:
+                file.write(f"{'*' * 10} Start Analyzing file {self.file_name}!{'*' * 10}\n\n")
+            else:
+                file.write('[' + str(log_list['time_event'][0]) + '-' + str(log_list['time_event'][1]) + '-' +
+                            str(log_list['time_event'][2]) + '] ' + str(log_list['time_event'][3]) + ':' +
+                            str(log_list['time_event'][4]) + '  ' + str(log_list['counter']) + '\n')
+        return
+
+
+class SortedByMinute(Analized):
+
+    def __init__(self, file_name, flag_mode):
+
+        super().__init__(file_name, flag_mode)
+
+    def standart(self, prev_log_time, log_list, line, file_name):
+        if "NOK" in line:
+            log_time = line[1:17]
+            time_value = time.strptime(str(log_time), "%Y-%m-%d %H:%M")
+
+
+            if time_value == prev_log_time:
+                log_list['time_event'] = time_value
+                log_list['counter'] += 1
+            else:
+                write = Analized(self.file_name, self.flag_mode)
+                write.Result_to_TXT(log_list)
+                log_list['time_event'] = time_value
+                log_list['counter'] = 1
+
+
+class SortedByHour(Analized):
+
+    def __init__(self, file_name, flag_mode):
+
+        super().__init__(file_name, flag_mode)
+
+    def by_hour(self, prev_log_time, log_list, line, file_name):
+        if "NOK" in line:
+            log_time = line[1:17]
+            time_value = time.strptime(str(log_time), "%Y-%m-%d %H:%M")
+
+            if time_value == prev_log_time or prev_log_time is not None:
+                log_list['time_event'] = time_value
+                log_list['counter'] += 1
+            else:
+                write = Analized(self.file_name, self.flag_mode)
+                write.Result_to_TXT(log_list)
+                log_list['time_event'] = time_value
+                log_list['counter'] = 1
+
+
+class SortedByMonth():
+    def by_month(self):
+        pass
+
+class SortedByYear():
+    def by_year(self):
+        pass
+
+
+
+
+open_file = OpenFile(file_name="events.txt",flag_mode = 2)
+open_file.open_file()
+
