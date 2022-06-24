@@ -67,7 +67,7 @@ class LogNOKGroupByMinute(LogNOK):
                 date_round = e.date
                 date_round = date_round.replace(microsecond=0, second=0)
                 # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
-                if not (date_round in self.log_entries_grp):
+                if not (date_round in self.log_entries_grp):dsdfsfsdf
                     self.log_entries_grp[date_round] = 1
                 else:
                     self.log_entries_grp[date_round] += 1
