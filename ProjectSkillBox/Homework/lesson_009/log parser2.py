@@ -5,6 +5,8 @@ class LogFile:
     __name = None
     log_entries = []
     log_entries_grp = {}
+    time_format = "%Y-%m-%d %H:%M:%S.%f"
+
 
     def __init__(self, file_name):
         self.set_name(file_name)
@@ -17,7 +19,7 @@ class LogFile:
 
     def write_to_file(self, file):
         for lg in self.log_entries_grp.items():
-            time_value = lg[0].strftime("%Y-%m-%d %H:%M")
+            time_value = lg[0].strftime(self.time_format)
             file.write(f'[{time_value}] {lg[1]}' + '\n')
 
 
@@ -57,12 +59,14 @@ class LogNOKGroupByMinute(LogNOK):
     def __init__(self, file_name):
         super().__init__(file_name)
         self.group()
+        self.time_format = "%Y-%m-%d %H:%M"
 
     def group(self):
         for e in self.log_entries:
             if e.is_not_ok():
                 date_round = e.date
-                date_round = date_round.replace(microsecond=0, second=0) # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
+                date_round = date_round.replace(microsecond=0, second=0)
+                # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
                 if not (date_round in self.log_entries_grp):
                     self.log_entries_grp[date_round] = 1
                 else:
