@@ -65,7 +65,6 @@ class LogNOKGroupByMinute(LogNOK):
             if e.is_not_ok():
                 date_round = e.date
                 date_round = date_round.replace(microsecond=0, second=0)
-                # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
                 if not (date_round in self.log_entries_grp):
                     self.log_entries_grp[date_round] = 1
                 else:
@@ -84,7 +83,6 @@ class LogNOKGroupByHour(LogNOK):
             if e.is_not_ok():
                 date_round = e.date
                 date_round = date_round.replace(microsecond=0, second=0, minute=0)
-                # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
                 if not (date_round in self.log_entries_grp):
                     self.log_entries_grp[date_round] = 1
                 else:
@@ -102,7 +100,6 @@ class LogNOKGroupByDay(LogNOK):
             if e.is_not_ok():
                 date_round = e.date
                 date_round = date_round.replace(microsecond=0, second=0, minute=0, hour=0)
-                # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
                 if not (date_round in self.log_entries_grp):
                     self.log_entries_grp[date_round] = 1
                 else:
@@ -120,8 +117,6 @@ class LogNOKGroupByMonth(LogNOK):
             if e.is_not_ok():
                 date_round = e.date
                 date_round = date_round.replace(microsecond=0, second=0, minute=0, hour=0, day=1)
-                # (int(date_round.year), int(date_round.month)
-                # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
                 if not (date_round in self.log_entries_grp):
                     self.log_entries_grp[date_round] = 1
                 else:
@@ -139,8 +134,6 @@ class LogNOKGroupByYear(LogNOK):
             if e.is_not_ok():
                 date_round = e.date
                 date_round = date_round.replace(microsecond=0, second=0, minute=0, hour=0, day=1, month=1)
-                # (int(date_round.year), int(date_round.month)
-                # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
                 if not (date_round in self.log_entries_grp):
                     self.log_entries_grp[date_round] = 1
                 else:
