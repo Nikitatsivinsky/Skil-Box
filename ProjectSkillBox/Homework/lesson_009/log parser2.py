@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 class LogFile:
     __name = None
     log_entries = []
@@ -67,19 +66,123 @@ class LogNOKGroupByMinute(LogNOK):
                 date_round = e.date
                 date_round = date_round.replace(microsecond=0, second=0)
                 # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
-                if not (date_round in self.log_entries_grp):dsdfsfsdf
+                if not (date_round in self.log_entries_grp):
                     self.log_entries_grp[date_round] = 1
                 else:
                     self.log_entries_grp[date_round] += 1
 
 
+class LogNOKGroupByHour(LogNOK):
+
+    def __init__(self, file_name):
+        super().__init__(file_name)
+        self.group()
+        self.time_format = "%Y-%m-%d %H"
+
+    def group(self):
+        for e in self.log_entries:
+            if e.is_not_ok():
+                date_round = e.date
+                date_round = date_round.replace(microsecond=0, second=0, minute=0)
+                # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
+                if not (date_round in self.log_entries_grp):
+                    self.log_entries_grp[date_round] = 1
+                else:
+                    self.log_entries_grp[date_round] += 1
+
+class LogNOKGroupByDay(LogNOK):
+
+    def __init__(self, file_name):
+        super().__init__(file_name)
+        self.group()
+        self.time_format = "%Y-%m-%d"
+
+    def group(self):
+        for e in self.log_entries:
+            if e.is_not_ok():
+                date_round = e.date
+                date_round = date_round.replace(microsecond=0, second=0, minute=0, hour=0)
+                # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
+                if not (date_round in self.log_entries_grp):
+                    self.log_entries_grp[date_round] = 1
+                else:
+                    self.log_entries_grp[date_round] += 1
+
+class LogNOKGroupByMonth(LogNOK):
+
+    def __init__(self, file_name):
+        super().__init__(file_name)
+        self.group()
+        self.time_format = "%Y-%m"
+
+    def group(self):
+        for e in self.log_entries:
+            if e.is_not_ok():
+                date_round = e.date
+                date_round = date_round.replace(microsecond=0, second=0, minute=0, hour=0, day=1)
+                # (int(date_round.year), int(date_round.month)
+                # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
+                if not (date_round in self.log_entries_grp):
+                    self.log_entries_grp[date_round] = 1
+                else:
+                    self.log_entries_grp[date_round] += 1
+
+class LogNOKGroupByYear(LogNOK):
+
+    def __init__(self, file_name):
+        super().__init__(file_name)
+        self.group()
+        self.time_format = "%Y"
+
+    def group(self):
+        for e in self.log_entries:
+            if e.is_not_ok():
+                date_round = e.date
+                date_round = date_round.replace(microsecond=0, second=0, minute=0, hour=0, day=1, month=1)
+                # (int(date_round.year), int(date_round.month)
+                # datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]
+                if not (date_round in self.log_entries_grp):
+                    self.log_entries_grp[date_round] = 1
+                else:
+                    self.log_entries_grp[date_round] += 1
 
 
+flag_mode = input(f'Введите 1 если хотите отсортировать файл по минутам\n'
+                  f'Введите 2 если хотите отсортировать файл по часам \n'
+                  f'Введите 3 если хотите отсортировать файл по дням\n'
+                  f'Введите 4 если хотите отсортировать файл по месяцам\n'
+                  f'Введите 5 если хотите отсортировать файл по годам\n')
+
+name_file = input(f'Введите 1 если хотите использовать стандартное название файла (result.txt)\n'
+                  f'Введите 2 если хотите использовать свое название файла\n')
+
+if int(name_file) == 1:
+    name_file = 'events.txt'
+elif int(name_file) == 2:
+    name_file = input(f'Введите свое название файла. Без расширения файла!(.txt)\n')
+    name_file.strip()
+    if '.txt' in name_file:
+        exit(f'Введено неверное название файла. Вводить нужно только имя. без расширения файла (.txt)')
+    name_file = name_file + '.txt'
+else:
+    exit(f'Введено неверное название файла')
 
 
+if int(flag_mode) == 1:
+    method_sort = LogNOKGroupByMinute(name_file)
+elif int(flag_mode) == 2:
+    method_sort = LogNOKGroupByHour(name_file)
+elif int(flag_mode) == 3:
+    method_sort = LogNOKGroupByDay(name_file)
+elif int(flag_mode) == 4:
+    method_sort = LogNOKGroupByMonth(name_file)
+elif int(flag_mode) == 5:
+    method_sort = LogNOKGroupByYear(name_file)
+else:
+    exit(f'Введено неверное значение выбора сортировки')
 
-x = LogNOKGroupByMinute('events.txt')
+
 
 with open("result.txt", mode='w+', encoding='utf8') as file:
     file.write(f"{'*' * 10} Start Analyzing file {'events.txt'}!{'*' * 10}\n\n")
-    x.write_to_file(file)
+    method_sort.write_to_file(file)

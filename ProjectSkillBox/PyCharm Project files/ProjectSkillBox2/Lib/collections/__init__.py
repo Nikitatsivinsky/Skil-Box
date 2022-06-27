@@ -337,7 +337,7 @@ def namedtuple(typename, field_names, *, rename=False, defaults=None, module=Non
     >>> x, y = p                        # unpack like a regular tuple
     >>> x, y
     (11, 22)
-    >>> p.x + p.y                       # fields also accessible by name
+    >>> p.method_sort + p.y                       # fields also accessible by name
     33
     >>> d = p._asdict()                 # convert to a dictionary
     >>> d['x']
