@@ -146,36 +146,34 @@ flag_mode = input(f'Введите 1 если хотите отсортиров�
                   f'Введите 4 если хотите отсортировать файл по месяцам\n'
                   f'Введите 5 если хотите отсортировать файл по годам\n')
 
-name_file = input(f'Введите 1 если хотите использовать стандартное название файла (result.txt)\n'
+file_name_result = input(f'Введите 1 если хотите использовать стандартное название файла (result.txt)\n'
                   f'Введите 2 если хотите использовать свое название файла\n')
 
-if int(name_file) == 1:
-    name_file = 'events.txt'
-elif int(name_file) == 2:
-    name_file = input(f'Введите свое название файла. Без расширения файла!(.txt)\n')
-    name_file.strip()
-    if '.txt' in name_file:
+if int(file_name_result) == 1:
+    file_name_result = 'events.txt'
+elif int(file_name_result) == 2:
+    file_name_result = input(f'Введите свое название файла. Без расширения файла!(.txt)\n')
+    file_name_result.strip()
+    if '.txt' in file_name_result:
         exit(f'Введено неверное название файла. Вводить нужно только имя. без расширения файла (.txt)')
-    name_file = name_file + '.txt'
+    file_name_result = file_name_result + '.txt'
 else:
     exit(f'Введено неверное название файла')
 
 
 if int(flag_mode) == 1:
-    method_sort = LogNOKGroupByMinute(name_file)
+    method_sort = LogNOKGroupByMinute('events.txt')
 elif int(flag_mode) == 2:
-    method_sort = LogNOKGroupByHour(name_file)
+    method_sort = LogNOKGroupByHour('events.txt')
 elif int(flag_mode) == 3:
-    method_sort = LogNOKGroupByDay(name_file)
+    method_sort = LogNOKGroupByDay('events.txt')
 elif int(flag_mode) == 4:
-    method_sort = LogNOKGroupByMonth(name_file)
+    method_sort = LogNOKGroupByMonth('events.txt')
 elif int(flag_mode) == 5:
-    method_sort = LogNOKGroupByYear(name_file)
+    method_sort = LogNOKGroupByYear('events.txt')
 else:
     exit(f'Введено неверное значение выбора сортировки')
 
-
-
-with open("result.txt", mode='w+', encoding='utf8') as file:
+with open(file_name_result, mode='w+', encoding='utf8') as file:
     file.write(f"{'*' * 10} Start Analyzing file {'events.txt'}!{'*' * 10}\n\n")
     method_sort.write_to_file(file)
