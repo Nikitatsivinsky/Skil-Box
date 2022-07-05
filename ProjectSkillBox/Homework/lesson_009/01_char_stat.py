@@ -25,104 +25,118 @@
 
 import os
 import zipfile as zfile
+from pprint import pprint
 
 
-class Import:
+class FileAnalysis:
 
-    def __init__(self, file_name):
-        self.file_name = file_name
-
-
-    def Open_File(self):
-        file = open(file=self.file_name, mode='r', encoding='cp1251')
-        number_operation = Number_Operation(file_name=file)
-        number_operation.collect()
-
-    def z_files(self, file_name):
-        if self.file_name.endswith('.zip'):
-            print(f"Обнаружен: Zip Архив.")
-        self.z_files(file_name)
-        file_name = os.path.join(os.path.dirname(__file__), self.file_name)
-        z_file = zfile.ZipFile(file_name, 'r')
-        for filename in z_file.namelist():
-            print(f"Обнаружен в Zip Архиве файл: {filename}")
-            if filename.endswith('.txt'):
-                print(f"Расспаковка из Zip Архива текстового файла: {filename}")
-                file_name = filename
-                z_file.extract(file_name)
-                self.file_name = filename
-        return file_name
-
-
-class Number_Operation (Import):
+    __path_analysis_file = None
+    __name_analysis_file = None
+    file_to_read = None
+    files_for_analysis_list = []
+    letters_dict = {}
 
     def __init__(self, file_name):
-        self.analize_count = 4
-        self.file = file_name
-        self.stat = {}
+        self.search_file(file_name)
 
-    def collect(self): #Гениратор самих строчек
-        self.sequence = ' ' * self.analize_count
-        with self.file as file_line:
-            # for line in file_line:
-            #     self._collect_for_line(line=line[:-1])
+    def get_file_path(self):
+        return self.__path_analysis_file
 
-    def _collect_for_line(self, line): #Строчки Лев Николаевич Толстой по буквам
-        # for char in line:
-        #     if char
-        pass
+    def get_file_name(self):
+        return self.__name_analysis_file
 
 
+    def search_file(self, file_name):
+        for dirpath,dirnames,filenames in os.walk(os.path.dirname(__file__)):
+            if file_name in filenames:
+                print(f"Файл найден в директории {dirpath}")
+                self.__path_analysis_file = os.path.join(dirpath, file_name)
+                self.__name_analysis_file = file_name
+                if self.get_file_path().endswith('.zip'):
+                    print(f"Обнаружен: Zip Архив.")
+                    self.z_files()
+
+    def z_files(self):
+        z_file = zfile.ZipFile(self.get_file_path(), 'r')
+        for file_in_zip in z_file.namelist():
+            print(f"В Zip Архиве обнаружен файл: {file_in_zip}")
+            if file_in_zip.endswith('.txt'):
+                file_operation_confirmation = input(f"Вы хотите расспаковать из Zip Архива текстовый файл: {file_in_zip} \n"
+                                    f"Введите Yes/Y если Да\n"
+                                    f"Найти другие текстовые файлы - Введите No/N\n"
+                                    f"Ваш ввод: ")
+                if file_operation_confirmation == 'Yes' or 'Y':
+                    self.files_for_analysis_list.append(file_in_zip)
+                    z_file.extract(file_in_zip)
+                else:
+                    continue
+
+class AnalizedLinesInFile(FileAnalysis):
+
+    def __init__(self, file_name):
+        super().__init__(file_name)
+        self.initialization_lines_to_dict()
+
+    def initialization_lines_to_dict(self):
+        for founded_files in self.files_for_analysis_list:
+            self.file_to_read = open(file=founded_files, mode='r', encoding='cp1251')
+            for line in self.file_to_read.readlines():
+                for letter in line:
+                    if letter.isalpha():
+                        if letter in self.letters_dict:
+                            self.letters_dict[letter] += 1
+                        else:
+                            self.letters_dict[letter] = 1
+
+
+class CounterLettersInFiles(AnalizedLinesInFile):
+    def __init__(self, file_name):
+        super().__init__(file_name)
+        self.result_method()
+
+    def result_method(self):
+        flag_input_method = input(f'Если Вы хотите вывести результат на консоль - введите 1 \n'
+                                  f'Если Вы хотите вывести результат в свой текстовый файл - введите 2\n'
+                                  f'Ваш ввод:')
+
+        letter_head, count_head, all_count_letter = 'Буква', 'Частота', 'Итого'
+        head_discription = f'|{letter_head:^10}|{count_head:^10}|'
+        head_line = f'{"+":-<11}{"+":-<11}{"+"}'
+
+        if int(flag_input_method) == 1:
+            print(head_line)
+            print(head_discription)
+            print(head_line)
+            total_letter_counter = 0
+            for letter, counter in self.letters_dict.items():
+                print(f'|{letter:^10}|{counter:^10}|')
+                total_letter_counter += counter
+            print(head_line)
+            print(f'|{all_count_letter:^10}|{total_letter_counter:^10}|')
+            print(head_line)
+
+        elif int(flag_input_method) == 2:
+            name_result_file = input(f'Введите название файла')
+            if name_result_file.endswith('.txt'):
+                with open(name_result_file, mode='w+', encoding='utf-8') as file:
+                    file.write(head_line)
+                    file.write(head_discription)
+                    file.write(head_line)
+                    total_letter_counter = 0
+                    for letter, counter in self.letters_dict.items():
+                        file.write(f'|{letter:^10}|{counter:^10}|')
+                        total_letter_counter += counter
+                    file.write(head_line)
+                    file.write(f'|{all_count_letter:^10}|{total_letter_counter:^10}|')
+                    file.write(head_line)
+                    print(f'Файл находиться по пути: {file.name}')
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-    # def prepare(self):
-    #     self.totals = {}
-    #     self.stat_for_generate = {}
-    #     for sequence, char_stat in self.stat.items():
-    #         self.totals[sequence] = 0
-    #         self.stat_for_generate[sequence] = []
-    #         for char, count in char_stat.items():
-    #             self.totals[sequence] += count
-    #             self.stat_for_generate[sequence].append([count, char])
-    #             self.stat_for_generate[sequence].sort(reverse=True)
-    #     print(f"self.totals = {self.totals}")
-    #     # print(f"self.stat_for_generate = {self.stat_for_generate}")
-    #     # print(f"self.stat IN PREPARE = {self.stat}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class Print_Result (Import):
-    pass
-
-
-
-
-file = Import(file_name='/home/niki/PycharmProjects/Skil-Box2/ProjectSkillBox/'
-                               'Homework/lesson_009/python_snippets/voyna-i-mir.txt.zip')
-file.Open_File()
+file = CounterLettersInFiles(file_name='voyna-i-mir.txt.zip')
 
 
 

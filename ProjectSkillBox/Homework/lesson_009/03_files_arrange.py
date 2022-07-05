@@ -74,7 +74,7 @@ class ZipOperations:
                         f.write(path.read_bytes())
 
 
-Open_file = ZipOperations(file_name='icons2.zip', output_path='Result')
+Open_file = ZipOperations(file_name='icons.zip', output_path='Result')
 
 # Усложненное задание (делать по желанию)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
