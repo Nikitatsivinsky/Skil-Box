@@ -21,15 +21,11 @@
 # Упорядочивание по частоте - по убыванию. Ширину таблицы подберите по своему вкусу
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
 
-# TODO здесь ваш код
-
 import os
 import zipfile as zfile
-from pprint import pprint
 
 
 class FileAnalysis:
-
     __path_analysis_file = None
     __name_analysis_file = None
     file_to_read = None
@@ -45,31 +41,37 @@ class FileAnalysis:
     def get_file_name(self):
         return self.__name_analysis_file
 
-
     def search_file(self, file_name):
-        for dirpath,dirnames,filenames in os.walk(os.path.dirname(__file__)):
+        for dirpath, dirnames, filenames in os.walk(os.path.dirname(__file__)):
             if file_name in filenames:
-                print(f"Файл найден в директории {dirpath}")
+                print(f"Зпрашиваемый файл или архив найден в директории {dirpath}")
                 self.__path_analysis_file = os.path.join(dirpath, file_name)
                 self.__name_analysis_file = file_name
                 if self.get_file_path().endswith('.zip'):
-                    print(f"Обнаружен: Zip Архив.")
+                    print(f"Запрашиваемый файл является Zip Архивом.")
                     self.z_files()
+                else:
+                    self.files_for_analysis_list.append(self.get_file_path())
 
     def z_files(self):
         z_file = zfile.ZipFile(self.get_file_path(), 'r')
         for file_in_zip in z_file.namelist():
             print(f"В Zip Архиве обнаружен файл: {file_in_zip}")
             if file_in_zip.endswith('.txt'):
-                file_operation_confirmation = input(f"Вы хотите расспаковать из Zip Архива текстовый файл: {file_in_zip} \n"
-                                    f"Введите Yes/Y если Да\n"
-                                    f"Найти другие текстовые файлы - Введите No/N\n"
-                                    f"Ваш ввод: ")
+                file_operation_confirmation = input(
+                    f"Вы хотите расспаковать из Zip Архива текстовый файл: {file_in_zip} \n"
+                    f"Введите Yes/Y если Да\n"
+                    f"Найти другие текстовые файлы - Введите No/N\n"
+                    f"Ваш ввод: ")
                 if file_operation_confirmation == 'Yes' or 'Y':
                     self.files_for_analysis_list.append(file_in_zip)
                     z_file.extract(file_in_zip)
                 else:
                     continue
+            else:
+                exit('Поиск по Zip архиву закончился успешно. \n'
+                     'В Zip архиве, нет TXT файлов, либо нет нужного текстового файла.')
+
 
 class AnalizedLinesInFile(FileAnalysis):
 
@@ -89,7 +91,69 @@ class AnalizedLinesInFile(FileAnalysis):
                             self.letters_dict[letter] = 1
 
 
-class CounterLettersInFiles(AnalizedLinesInFile):
+class SortDict(AnalizedLinesInFile):
+
+    def __init__(self, file_name):
+        super().__init__(file_name)
+        self.choice_sorting_method()
+
+    def choice_sorting_method(self):
+        flag_sorting_method = input(f'Если Вы хотите отсортировать результат по частоте по возрастанию -  введите 1\n'
+                                    f'Если Вы хотите отсортировать результат по частоте по убыванию -  введите 2\n'
+                                    f'Если Вы хотите отсортировать результат по алфавиту по возрастанию -  введите 3\n'
+                                    f'Если Вы хотите отсортировать результат по алфавиту по убыванию -  введите 4\n'
+                                    f'Ваш ввод:')
+
+        if int(flag_sorting_method) == 1:
+            self.sort_ascending()
+        elif int(flag_sorting_method) == 2:
+            self.sort_descending()
+        elif int(flag_sorting_method) == 3:
+            self.sort_alphabetically_ascending()
+        elif int(flag_sorting_method) == 4:
+            self.sort_alphabetically_descending()
+        else:
+            self.choice_sorting_method()
+
+    def sort_ascending(self):
+        sorted_dict = {}
+        sorted_keys = sorted(self.letters_dict, key=self.letters_dict.get)
+        for w in sorted_keys:
+            sorted_dict[w] = self.letters_dict[w]
+        self.letters_dict = sorted_dict
+
+    def sort_descending(self):
+        sorted_dict = {}
+        sorted_keys = sorted(self.letters_dict, key=self.letters_dict.get)
+        sorted_keys.reverse()
+        for w in sorted_keys:
+            sorted_dict[w] = self.letters_dict[w]
+        self.letters_dict = sorted_dict
+
+    def sort_alphabetically_ascending(self):
+        letters_list_for_sorting = []
+        letters_dict_for_sorting = {}
+        for letter, counter in self.letters_dict.items():
+            letters_list_for_sorting.extend(letter)
+        letters_list_for_sorting.sort()
+        for letter in letters_list_for_sorting:
+            letters_dict_for_sorting[letter] = self.letters_dict[letter]
+        self.letters_dict = letters_dict_for_sorting
+
+    def sort_alphabetically_descending(self):
+        letters_list_for_sorting = []
+        letters_dict_for_sorting = {}
+        for letter, counter in self.letters_dict.items():
+            letters_list_for_sorting.append(letter)
+        letters_list_for_sorting.sort()
+        letters_list_for_sorting.reverse()
+        for letter in letters_list_for_sorting:
+            letters_dict_for_sorting[letter] = self.letters_dict[letter]
+        self.letters_dict = letters_dict_for_sorting
+
+
+class CounterLettersInFiles(SortDict):
+
     def __init__(self, file_name):
         super().__init__(file_name)
         self.result_method()
@@ -117,23 +181,23 @@ class CounterLettersInFiles(AnalizedLinesInFile):
 
         elif int(flag_input_method) == 2:
             name_result_file = input(f'Введите название файла')
-            if name_result_file.endswith('.txt'):
-                with open(name_result_file, mode='w+', encoding='utf-8') as file:
-                    file.write(head_line)
-                    file.write(head_discription)
-                    file.write(head_line)
-                    total_letter_counter = 0
-                    for letter, counter in self.letters_dict.items():
-                        file.write(f'|{letter:^10}|{counter:^10}|')
-                        total_letter_counter += counter
-                    file.write(head_line)
-                    file.write(f'|{all_count_letter:^10}|{total_letter_counter:^10}|')
-                    file.write(head_line)
-                    print(f'Файл находиться по пути: {file.name}')
+            if not name_result_file.endswith('.txt'):
+                name_result_file = name_result_file + '.txt'
+            with open(name_result_file, mode='w+', encoding='utf-8') as file:
+                file.write(f'{head_line}\n')
+                file.write(f'{head_discription}\n')
+                file.write(f'{head_line}\n')
+                total_letter_counter = 0
+                for letter, counter in self.letters_dict.items():
+                    file.write(f'|{letter:^10}|{counter:^10}|\n')
+                    total_letter_counter += counter
+                file.write(f'{head_line}\n')
+                file.write(f'|{all_count_letter:^10}|{total_letter_counter:^10}|\n')
+                file.write(f'{head_line}\n')
+                print(f'Файл находиться по пути: {os.path.join(os.path.dirname(__file__), file.name)}')
 
-
-
-
+        else:
+            self.result_method()
 
 
 file = CounterLettersInFiles(file_name='voyna-i-mir.txt.zip')
