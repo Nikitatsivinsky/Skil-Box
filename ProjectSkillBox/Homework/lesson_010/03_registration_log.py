@@ -22,4 +22,15 @@
 # - поле возраст НЕ является числом от 10 до 99: ValueError
 # Вызов метода обернуть в try-except.
 
-# TODO здесь ваш код
+class NotNameError(Exception):
+    pass
+
+class NotEmailError(Exception):
+    pass
+
+files = {"input":open("registrations.txt", "r") ,
+        'bad': open("registrations_good.log", "w"),
+        'good': open("registrations_bad.log", "w")}
+
+for flag, value in files.items():
+    print(flag, value)
