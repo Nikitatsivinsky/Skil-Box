@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.10
 # -*- coding: utf-8 -*-
 
 # Подсчитать статистику по буквам в романе Война и Мир.
