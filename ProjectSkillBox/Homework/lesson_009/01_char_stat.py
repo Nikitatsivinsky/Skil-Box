@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Подсчитать статистику по буквам в романе Война и Мир.
@@ -35,6 +36,7 @@ class FileAnalysis:
     def __init__(self, file_name):
         self.search_file(file_name)
 
+
     def get_file_path(self):
         return self.__path_analysis_file
 
@@ -45,15 +47,15 @@ class FileAnalysis:
         for dirpath, dirnames, filenames in os.walk(os.path.dirname(__file__)):
             if file_name in filenames:
                 print(f"Зпрашиваемый файл или архив найден в директории {dirpath}")
-                self.__path_analysis_file = os.path.join(dirpath, file_name)
-                self.__name_analysis_file = file_name
+                self.__path_analysis_file = os.path.join(dirpath, file_name) #init
+                self.__name_analysis_file = file_name #init
                 if self.get_file_path().endswith('.zip'):
                     print(f"Запрашиваемый файл является Zip Архивом.")
-                    self.z_files()
+                    self.unzip_files()
                 else:
                     self.files_for_analysis_list.append(self.get_file_path())
 
-    def z_files(self):
+    def unzip_files(self):
         z_file = zfile.ZipFile(self.get_file_path(), 'r')
         for file_in_zip in z_file.namelist():
             print(f"В Zip Архиве обнаружен файл: {file_in_zip}")
@@ -105,51 +107,34 @@ class SortDict(AnalizedLinesInFile):
                                     f'Ваш ввод:')
 
         if int(flag_sorting_method) == 1:
-            self.sort_ascending()
+            self.sort_by_count()
         elif int(flag_sorting_method) == 2:
-            self.sort_descending()
+            self.sort_by_count(descending=True)
         elif int(flag_sorting_method) == 3:
-            self.sort_alphabetically_ascending()
+            self.sort_by_letter()
         elif int(flag_sorting_method) == 4:
-            self.sort_alphabetically_descending()
+            self.sort_by_letter(descending=True)
         else:
             self.choice_sorting_method()
 
-    def sort_ascending(self):
+    def sort_by_count(self, descending=False):
         sorted_dict = {}
-        sorted_keys = sorted(self.letters_dict, key=self.letters_dict.get)
+        sorted_keys = sorted(self.letters_dict, key=self.letters_dict.get, reverse=descending)
         for w in sorted_keys:
             sorted_dict[w] = self.letters_dict[w]
         self.letters_dict = sorted_dict
 
-    def sort_descending(self):
-        sorted_dict = {}
-        sorted_keys = sorted(self.letters_dict, key=self.letters_dict.get)
-        sorted_keys.reverse()
-        for w in sorted_keys:
-            sorted_dict[w] = self.letters_dict[w]
-        self.letters_dict = sorted_dict
-
-    def sort_alphabetically_ascending(self):
+    def sort_by_letter(self, descending=False):
         letters_list_for_sorting = []
         letters_dict_for_sorting = {}
         for letter, counter in self.letters_dict.items():
             letters_list_for_sorting.extend(letter)
-        letters_list_for_sorting.sort()
+        letters_list_for_sorting.sort(reverse=descending)
         for letter in letters_list_for_sorting:
             letters_dict_for_sorting[letter] = self.letters_dict[letter]
         self.letters_dict = letters_dict_for_sorting
 
-    def sort_alphabetically_descending(self):
-        letters_list_for_sorting = []
-        letters_dict_for_sorting = {}
-        for letter, counter in self.letters_dict.items():
-            letters_list_for_sorting.append(letter)
-        letters_list_for_sorting.sort()
-        letters_list_for_sorting.reverse()
-        for letter in letters_list_for_sorting:
-            letters_dict_for_sorting[letter] = self.letters_dict[letter]
-        self.letters_dict = letters_dict_for_sorting
+
 
 
 class CounterLettersInFiles(SortDict):
