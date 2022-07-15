@@ -22,15 +22,46 @@
 # - поле возраст НЕ является числом от 10 до 99: ValueError
 # Вызов метода обернуть в try-except.
 
+from pprint import pprint
+
+
 class NotNameError(Exception):
     pass
+
 
 class NotEmailError(Exception):
     pass
 
-files = {"input":open("registrations.txt", "r") ,
-        'bad': open("registrations_good.log", "w"),
-        'good': open("registrations_bad.log", "w")}
 
-for flag, value in files.items():
-    print(flag, value)
+def bad_line_write(line_input_file):
+    with open('registrations_bad.log', 'a') as bad:
+        bad.write(line_input_file)
+
+
+with open('registrations.txt', 'r') as input_file:
+    for line_input_file in input_file:
+        try:
+            name, mail, year = line_input_file[:-1].split(' ')
+        except ValueError as exc:
+            bad_line_write(f'"{line_input_file[:-1]}"Ошибка:  {exc.args[0]}')
+            print(f'Ошибка, не все поля заполненны.Парметры: {exc.args[0]} \n')
+            continue
+
+        try:
+            if not name.isalpha():
+                raise NotNameError(' Поле имени содержит не только буквы')
+            elif not '@' and '.' in mail:
+                raise NotEmailError(' Некорректное поле емейл')
+            elif not 10 < int(year) < 100:
+                raise ValueError(' Некорректный возраст, дебил.')
+            else:
+                with open('registrations_good.log', 'a') as good:
+                    good.write(line_input_file)
+        except NotNameError as exc:
+            bad_line_write(f'"{line_input_file[:-1]}"Парметры:  {exc.args[0]} \n')
+        except NotEmailError as exc:
+            bad_line_write(f'"{line_input_file[:-1]}"Парметры:  {exc.args[0]} \n')
+        except ValueError as exc:
+            bad_line_write(f' "{line_input_file[:-1]}" Парметры:  {exc.args[0]} \n')
+        except Exception as exc:
+            bad_line_write(f'В строке "{line_input_file[:-1]}" Трабла: {exc.args[0]}\n')
