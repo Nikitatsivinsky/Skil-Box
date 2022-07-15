@@ -17,7 +17,7 @@
 # При создании собственных исключений максимально использовать функциональность
 # базовых встроенных исключений.
 
-from random import randint, random, choice
+from random import randint, choice
 
 
 class CustomException(Exception):
