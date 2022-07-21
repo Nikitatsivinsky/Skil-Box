@@ -10,7 +10,6 @@ from datetime import datetime
 
 
 class LogParser:
-
     log_entries_dict = {}
 
     def __init__(self, name_parsing_file):
@@ -36,10 +35,13 @@ class LogParser:
         with open(self.name_parsing_file, mode='r', ) as file:
             for line in file:
                 time_text = str(line[1:27])
-                self.date = datetime.strptime(time_text, "%Y-%m-%d %H:%M:%S.%f")
-                self.date = self.date.strftime("%Y-%m-%d %H:%M")
-                self.value = str(line[29:]).strip()
-                self.make_log_entries_dict()
+                try:
+                    self.date = datetime.strptime(time_text, "%Y-%m-%d %H:%M:%S.%f")
+                    self.date = self.date.strftime("%Y-%m-%d %H:%M")
+                    self.value = str(line[29:]).strip()
+                    self.make_log_entries_dict()
+                except ValueError:
+                    continue
 
     def is_not_ok(self):
         if self.value == 'NOK':
