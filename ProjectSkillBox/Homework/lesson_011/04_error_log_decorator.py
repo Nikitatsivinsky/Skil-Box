@@ -33,8 +33,8 @@ def perky(param):
 
 
 @log_errors(file_name='function_errors.log')
-def check_line(line):
-    name, email, age = line.split(' ')
+def check_line(line_to_check):
+    name, email, age = line_to_check.split(' ')
     if not name.isalpha():
         raise ValueError("it's not a name")
     if '@' not in email or '.' not in email:
