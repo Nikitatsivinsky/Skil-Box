@@ -189,10 +189,7 @@ kolya.join()
 
 print('.' * 20, 'Итак, они вернулись')
 
-for fisher in (vasya, kolya):
-    print(f'Итого рыбак {fisher.name} поймал:')
-    for fish, count in fisher.catch.items():
-        print(f'    {fish} - {count}')
+ 
 
 
 # Обрабатывать ошибки нужно в самом потоке
