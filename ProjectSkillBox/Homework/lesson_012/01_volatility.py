@@ -48,6 +48,7 @@
 #
 # Подготовка исходных данных
 # 1. Скачать файл https://drive.google.com/file/d/1l5sia-9c-t91iIPiGyBc1s9mQ8RgTNqb/view?usp=sharing
+#                 https://drive.google.com/file/d/1AlsYHIPCbMjDFmYNdAjLQEDOfjSI6tb-/view
 #       (обратите внимание на значок скачивания в правом верхнем углу,
 #       см https://drive.google.com/file/d/1M6mW1jI2RdZhdSCEmlbFi5eoAXOR3u6G/view?usp=sharing)
 # 2. Раззиповать средствами операционной системы содержимое архива
@@ -73,4 +74,101 @@
 #     def run(self):
 #         <обработка данных>
 
-# TODO написать код в однопоточном/однопроцессорном стиле
+
+import os
+from collections import defaultdict
+
+from get_file_from_google_disk import GoogleDriveDownloader
+
+
+
+class DictSortable(defaultdict):
+
+    def sort_by_value(self, descending=False):
+
+        sorted_values = sorted(self.values(), reverse=descending)
+        sorted_dict = {}
+
+        for i in sorted_values:
+            for k in self.keys():
+                if self[k] == i:
+                    sorted_dict[k] = self[k]
+                    break
+        return sorted_dict
+
+def analyze_ticker(f_name):
+    with open(file=f_name, mode='r', encoding='utf-8') as file:
+        price_max = None
+        price_min = None
+        skip_header = True
+        first_values = True
+        for line in file:
+            secid, tradetime, price, quantity = line.split(",")
+            if skip_header:
+                skip_header = False
+                continue
+
+            if first_values:
+                price_max = float(price)
+                price_min = float(price)
+                first_values = False
+                continue
+
+            if float(price) > price_max:
+                price_max = float(price)
+
+            if float(price) < price_min:
+                price_min = float(price)
+
+        average_price = (price_min + price_max) / 2
+        volatility = round(((price_max - price_min) / average_price) * 100, 2)
+    return volatility, secid
+
+
+downloadeble_file_path = os.path.dirname(__file__) + "/" + 'trades.zip'
+downloadeble_file_link = "https://drive.google.com/file/d/1l5sia-9c-t91iIPiGyBc1s9mQ8RgTNqb/view?usp=sharing"
+if not os.path.exists(downloadeble_file_path):
+    GoogleDriveDownloader.download_file_from_google_drive(file_id=downloadeble_file_link,
+                                                          dest_path=downloadeble_file_path, unzip=True)
+trades_dir = os.path.dirname(__file__)+'/trades/'
+
+ticker_list = []
+
+
+for name in os.listdir(trades_dir):
+    if os.path.isfile(trades_dir+name):
+        ticker_list.append(trades_dir+name)
+
+volatility_max_dict = {}
+volatility_min_dict = {}
+
+volatility_zero_dict = {}
+
+tickers_general = DictSortable(float)
+
+
+for ticker_path in ticker_list:
+    volatility, secid = analyze_ticker(ticker_path)
+    if volatility == 0:
+        volatility_zero_dict[secid] = volatility
+    else:
+        tickers_general[secid] = volatility
+
+i = 0
+for key, value in tickers_general.sort_by_value(descending=True).items():
+    if i < 3:
+        volatility_max_dict[key] = value
+    elif i >= len(tickers_general.sort_by_value(descending=True).items())-3:
+        volatility_min_dict[key] = value
+    i += 1
+
+
+zero_dict_for_print = ', '.join(volatility_zero_dict)
+print(" " * 3, 'Максимальная волатильность:')
+for name, value in volatility_max_dict.items():
+    print(f'{" " * 6}{name} - {value} %')
+print(" " * 3, 'Минимальная волатильность:')
+for name, value in volatility_min_dict.items():
+    print(f'{" " * 6}{name} - {value} %')
+print(" " * 3, 'Нулевая волатильность:')
+print(f'{" " * 6}{zero_dict_for_print}')
