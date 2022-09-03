@@ -4,24 +4,23 @@ import argparse
 class BowlingScoreEngine:
 
     def __init__(self, game_result: str):
-
         if game_result == None:
             raise TypeError('Вызовите скрипт с параметром!')
-
-        self.game_result = game_result
+        self.game_result = str(game_result)
         self.score = 0
-        self.get_score()
         self.frame = 0
+        self.get_score()
 
     def __str__(self):
         return f'Счет: {self.score}'
 
     def get_score(self):
+        value_for_exc = None
         one_frame_counter = 0
         try:
             for val in self.game_result:
-
-                if val == 'Х' or val == 'Х':
+                value_for_exc = val
+                if val == 'X' or val == 'Х' or val == 'Х':
                     self.score += 20
                     self.frame += 1
                 elif val == '/':
@@ -35,7 +34,7 @@ class BowlingScoreEngine:
                     self.score += int(val)
                     one_frame_counter += 1
                 else:
-                    self.raise_error(val)
+                    self.raise_error(value_for_exc, val)
 
                 if one_frame_counter == 2:
                     self.frame += 1
@@ -43,21 +42,22 @@ class BowlingScoreEngine:
 
                 if self.frame > 10:
                     raise ValueError('Количество фреймов превышает 10!')
-        except Exception as exc:
-            self.raise_error(val, exc)
 
-    def raise_error(self, val, exc=None):
+        except Exception as exc:
+            self.raise_error(value_for_exc, exc)
+
+    def raise_error(self, val, exc):
 
         list_of_invalid_symbols = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '|', ':', '<',
                                    '>', '?', '.', ',', ';', "'", '[', ']', '\\', '=', '`', '~']
 
-
-        if "'" in val or '"' in val:
+        if "'" in val:
             raise ValueError(f'Неверный формат данных, при вызове функции с параметром '
                              f'не используйте кавычки: <{val}>!')
+        if self.frame > 10:
+            raise ValueError('Количество фреймов превышает 10!')
         elif val in list_of_invalid_symbols:
-            raise ValueError(f'Неверный формат данных, в запросе присутствует неверный символ- "{val}"! \n'
-                             f'Возможно вы вызвали функцию с пустым параметром!')
+            raise ValueError(f'Неверный формат данных, в запросе присутствует неверный символ- "{val}"!')
         elif val.isalpha():
             raise ValueError(f'Неверный формат данных, в запросе присутствует неверная буква - "{val}"!')
         elif val == "0":
