@@ -6,10 +6,21 @@ class BowlingScoreEngine:
     def __init__(self, game_result: str):
         if game_result == None:
             raise TypeError('Вызовите скрипт с параметром!')
-        self.game_result = str(game_result)
-        self.score = 0
-        self.frame = 0
-        self.get_score()
+        elif game_result == '':
+            raise ValueError('Вызовите скрипт с параметром!')
+        elif game_result == "":
+            raise ValueError('Вызовите скрипт с параметром!')
+        elif game_result == " ":
+            raise ValueError('Вызовите скрипт с параметром!')
+        elif "'" in game_result:
+            raise ValueError('Вызовите скрипт с параметром , без кавычек!')
+        elif '"' in game_result:
+            raise ValueError('Вызовите скрипт с параметром , без кавычек!')
+        else:
+            self.game_result = str(game_result)
+            self.score = 0
+            self.frame = 0
+            self.get_score()
 
     def __str__(self):
         return f'Счет: {self.score}'
