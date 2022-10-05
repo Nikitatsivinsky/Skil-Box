@@ -44,11 +44,113 @@
 # 2.Перейти в другую локацию
 # 3.Выход
 
-remaining_time = '1234567890.0987654321'
-# если изначально не писать число в виде строки - теряется точность!
-field_names = ['current_location', 'current_experience', 'current_date']
+import json
+import re
+from datetime import datetime
+from decimal import *
 
-# TODO тут ваш код
 
+# remaining_time = '1234567890.0987654321'
+# # если изначально не писать число в виде строки - теряется точность!
+# field_names = ['current_location', 'current_experience', 'current_date']
 # Учитывая время и опыт, не забывайте о точности вычислений!
+
+
+class GameEngine:
+
+    def __init__(self, data):
+        self.current_experience = 0
+        self.remaining_time = '1234567890.0987654321'
+        self.time_playing = datetime.now()
+        self.current_data = data
+        self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(self.current_data)
+
+    def start(self):
+        while True:
+            action = self.next_action()
+
+            if action == 1:
+
+                if self.list_mob != []:
+                    counter = 1
+                    for mob in self.list_mob:
+                        print(f'Если хотите атаковать {mob} нажмите {counter}')
+                        counter += 1
+                    attack = int(input('Введите номер монстра: '))
+                    self.attack_monster(self.list_mob[attack - 1])
+                    mob = self.list_mob[attack - 1]
+                    self.current_data[self.current_location].remove(mob)
+                    self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(self.current_data)
+                else:
+                    print('В локации нет монстров')
+                    self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(self.current_data)
+
+            elif action == 2:
+                location_list = []
+                counter = 1
+                for location in self.dict_avalible_transit:
+                    print(f"Если хотите перейти в локацию {location} - введите {counter}")
+                    counter += 1
+                    location_list.append(location)
+                location_flag = int(input('Введите номер локации: '))
+                next_location_name = location_list[location_flag - 1]
+                self.player_performance(next_location_name)
+                self.current_data = self.dict_avalible_transit[next_location_name]
+                self.current_list_mob = self.list_mob
+                self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(self.current_data)
+
+            elif action == 3:
+                exit('Вы вышли из игры')
+
+    def next_action(self):
+        result = int(input('Выберите действие:\n1.Атаковать монстра\n2.Перейти в другую локацию\n3.Выход\n'))
+        if result > 4 or result < 1:
+            print('Некорректный ввод')
+            self.next_action()
+        else:
+            return result
+
+    def attack_monster(self, monster):
+        print(f'Вы атаковали {monster}')
+        self.player_performance(monster)
+
+    def next_transit(self, value):
+
+        dict_avalible_transit = {}
+        list_mob = []
+
+        for main_location, value in value.items():
+            print('_____________________________________________________________')
+            print(f'Вы находитесь в {main_location}')
+            print(f'У вас {self.current_experience} опыта и осталось {self.remaining_time} секунд')
+            print(f'Прошло уже {datetime.now() - self.time_playing}')
+            print('Внутри вы видите:')
+            for item in value:
+                if type(item) == dict:
+                    for location, value in item.items():
+                        print(f'-- Вход в локацию: {location}')
+                        dict_avalible_transit[location] = item
+                else:
+                    print(f'-- Монстра {item}')
+                    list_mob.append(item)
+            return [main_location, dict_avalible_transit, list_mob]
+
+    def player_performance(self, name_value):
+
+        tm = re.search("tm+\d+", name_value)
+        exp = re.search("exp+\d+", name_value)
+        if tm is not None:
+            tm = tm[0].strip('tm')
+            self.remaining_time = (Decimal(self.remaining_time) - Decimal(tm))
+        if exp is not None:
+            exp = exp[0].strip('exp')
+            self.current_experience = Decimal(self.current_experience) + Decimal(exp)
+
+if __name__ == '__main__':
+    with open('rpg.json', 'r') as f:
+        data = json.load(f)
+    game = GameEngine(data)
+    game.start()
+
+
 
