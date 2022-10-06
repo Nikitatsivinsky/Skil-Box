@@ -31,17 +31,17 @@ class BowlingScoreEngine:
         try:
             for val in self.game_result:
                 value_for_exc = val
-                if val == 'X' or val == 'Х' or val == 'Х':
+                if val == 'X' or val == 'Х':
                     self.score += 20
                     self.frame += 1
-                elif val == '/':
+                elif val == '/': #проверка число перед
                     self.score -= int(self.game_result[self.game_result.index(val) - 1])
                     self.score += 15
                     self.frame += 1
                 elif val == '-':
                     self.score += 0
                     one_frame_counter += 1
-                elif int(val) in range(1, 10):
+                elif int(val) in range(1, 9):
                     self.score += int(val)
                     one_frame_counter += 1
                 else:
@@ -78,7 +78,7 @@ class BowlingScoreEngine:
 
 if __name__ == '__main__':
     """
-    argparser
+    argparse
     """
     parser = argparse.ArgumentParser(description='Подсчет очков в игре Боулинг')
     parser.add_argument('--result', type=str, help='Результат игры')
