@@ -46,14 +46,10 @@
 
 import json
 import re
+import sys
 from datetime import datetime
 from decimal import *
-
-
-# remaining_time = '1234567890.0987654321'
-# # если изначально не писать число в виде строки - теряется точность!
-# field_names = ['current_location', 'current_experience', 'current_date']
-# Учитывая время и опыт, не забывайте о точности вычислений!
+import csv
 
 
 class GameEngine:
@@ -61,12 +57,15 @@ class GameEngine:
     def __init__(self, data):
         self.current_experience = 0
         self.remaining_time = '1234567890.0987654321'
+        self.field_names = ['current_location', 'current_experience', 'current_date']
         self.time_playing = datetime.now()
         self.current_data = data
         self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(self.current_data)
+        self.csv_counter = 1
 
     def start(self):
         while True:
+            self.journal_csv(self.current_location, self.current_experience, self.remaining_time)
             action = self.next_action()
 
             if action == 1:
@@ -79,11 +78,24 @@ class GameEngine:
                     attack = int(input('Введите номер монстра: '))
                     self.attack_monster(self.list_mob[attack - 1])
                     mob = self.list_mob[attack - 1]
-                    self.current_data[self.current_location].remove(mob)
-                    self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(self.current_data)
+
+                    if type(self.current_data[self.current_location]) == list:
+                        for i in self.current_data[self.current_location]:
+                            if type(i) == dict:
+                                continue
+                            elif type(i) == list:
+                                if mob in i:
+                                    i.remove(mob)
+                            else:
+                                self.current_data[self.current_location].remove(mob)
+                                break
+
+                    self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(
+                        self.current_data)
                 else:
                     print('В локации нет монстров')
-                    self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(self.current_data)
+                    self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(
+                        self.current_data)
 
             elif action == 2:
                 location_list = []
@@ -93,11 +105,17 @@ class GameEngine:
                     counter += 1
                     location_list.append(location)
                 location_flag = int(input('Введите номер локации: '))
-                next_location_name = location_list[location_flag - 1]
-                self.player_performance(next_location_name)
-                self.current_data = self.dict_avalible_transit[next_location_name]
-                self.current_list_mob = self.list_mob
-                self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(self.current_data)
+                if location_flag > len(location_list):
+                    print('Нет такой локации')
+                    self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(
+                        self.current_data)
+                else:
+                    next_location_name = location_list[location_flag - 1]
+                    self.player_performance(next_location_name)
+                    self.current_data = self.dict_avalible_transit[next_location_name]
+                    self.current_list_mob = self.list_mob
+                    self.current_location, self.dict_avalible_transit, self.list_mob = self.next_transit(
+                        self.current_data)
 
             elif action == 3:
                 exit('Вы вышли из игры')
@@ -124,12 +142,33 @@ class GameEngine:
             print(f'Вы находитесь в {main_location}')
             print(f'У вас {self.current_experience} опыта и осталось {self.remaining_time} секунд')
             print(f'Прошло уже {datetime.now() - self.time_playing}')
+
+            if value == []:
+                sys.exit("Локация пустая, игра окончена!")
+            elif self.current_experience >= 280:
+                print('_____________________________________________________________')
+                print(
+                    f'Вы победили!\nВаш результат {self.current_experience} опыта и осталось '
+                    f'{self.remaining_time} секунд!')
+                sys.exit()
+            elif Decimal(self.remaining_time) <= Decimal('0'):
+                print('_____________________________________________________________')
+                print(
+                    f'У вас закончилось время!\nВаш результат {self.current_experience} опыта и прошло '
+                    f'{datetime.now() - self.time_playing} секунд!')
+                sys.exit()
+
             print('Внутри вы видите:')
+
             for item in value:
                 if type(item) == dict:
                     for location, value in item.items():
                         print(f'-- Вход в локацию: {location}')
                         dict_avalible_transit[location] = item
+                elif type(item) == list:
+                    for monster in item:
+                        print(f'-- Монстра {monster}')
+                        list_mob.append(monster)
                 else:
                     print(f'-- Монстра {item}')
                     list_mob.append(item)
@@ -146,11 +185,19 @@ class GameEngine:
             exp = exp[0].strip('exp')
             self.current_experience = Decimal(self.current_experience) + Decimal(exp)
 
+    def journal_csv(self, location, experience, time):
+        with open('dungeon.csv', 'a', newline='') as csv_file:
+            writer = csv.writer(csv_file, delimiter=',')
+            if self.csv_counter == 1:
+                writer.writerow(self.field_names)
+                self.csv_counter += 1
+            writer.writerow([location, experience, time])
+
+
 if __name__ == '__main__':
+    with open('dungeon.csv', 'w', newline='') as csv_file:
+        pass
     with open('rpg.json', 'r') as f:
         data = json.load(f)
     game = GameEngine(data)
     game.start()
-
-
-
